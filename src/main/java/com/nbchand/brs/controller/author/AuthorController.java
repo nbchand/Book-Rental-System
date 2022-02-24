@@ -5,10 +5,7 @@ import com.nbchand.brs.service.author.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,6 +29,7 @@ public class AuthorController {
         model.addAttribute("authorDtoList", authorService.findAllEntities());
         return "author/authorLanding";
     }
+
     @GetMapping("/add-author")
     public String displayAuthorForm(Model model){
         model.addAttribute("authorDto", new AuthorDto());
@@ -45,5 +43,17 @@ public class AuthorController {
         }
         authorService.saveEntity(authorDto);
         return "redirect:/author";
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public String deleteAuthor(@PathVariable("id") Integer id){
+        System.out.println("Hello");
+        AuthorDto authorDto = authorService.findEntityById(id);
+        if(authorDto == null){
+            return "failed";
+        }
+        authorService.deleteEntityById(id);
+        return "success";
     }
 }

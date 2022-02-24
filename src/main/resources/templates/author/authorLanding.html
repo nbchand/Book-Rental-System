@@ -16,7 +16,8 @@
         <a th:href="@{~/author/add-author}">Add author</a>
     </div>
     <div class="table-container">
-        <table>
+        <div class="message" th:if="${authorDtoList.isEmpty()}">No authors added</div>
+        <table th:unless="${authorDtoList.isEmpty()}">
             <tr>
                 <th>S.N</th>
                 <th>Name</th>
@@ -30,10 +31,10 @@
                 <td th:text="${authorDto.email}"></td>
                 <td th:text="${authorDto.mobileNumber}"></td>
                 <td>
-                    <a href="#"
+                    <a class="edit" th:href="@{~/author/edit/}+${authorDto.id}"
                     ><i class="fa fa-pencil edit" aria-hidden="true"></i
                     ></a>
-                    <a href="#"
+                    <a href="#" class="del" th:id="${authorDto.id}"
                     ><i class="fa fa-trash delete" aria-hidden="true"></i
                     ></a>
                 </td>
@@ -41,7 +42,6 @@
         </table>
     </div>
 </div>
-
-<script src="script.js"></script>
+<script th:src="@{~/js/author/authorLanding.js}"></script>
 </body>
 </html>

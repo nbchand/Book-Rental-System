@@ -41,6 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
                         .email(author.getEmail())
                         .mobileNumber(author.getMobileNumber())
                         .name(author.getName())
+                        .id(author.getId())
                         .build()
         ).collect(Collectors.toList());
 

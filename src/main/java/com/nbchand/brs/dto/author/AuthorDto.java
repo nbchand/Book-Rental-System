@@ -16,6 +16,7 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @ToString
 public class AuthorDto {
+    private Integer id;
     @NotEmpty(message = "Name of the author must not be empty")
     private String name;
     @NotEmpty(message = "Email of the author must not be empty")
