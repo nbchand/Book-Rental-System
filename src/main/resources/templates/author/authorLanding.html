@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/homePage.css}">
+    <link rel="stylesheet" th:href="@{~/css/tableButton.css}">
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Author Setup</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/author/add-author}">Add author</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>S.N</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Nabin</td>
+                <td>nabin@gmail.com</td>
+                <td>9876875432</td>
+                <td>
+                    <a href="#"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <a href="#"
+                    ><i class="fa fa-trash delete" aria-hidden="true"></i
+                    ></a>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Nabin</td>
+                <td>nabin@gmail.com</td>
+                <td>9876875432</td>
+                <td>
+                    <a href="#"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <a href="#"
+                    ><i class="fa fa-trash delete" aria-hidden="true"></i
+                    ></a>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Nabin</td>
+                <td>nabin@gmail.com</td>
+                <td>9876875432</td>
+                <td>
+                    <a href="#"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <a href="#"
+                    ><i class="fa fa-trash delete" aria-hidden="true"></i
+                    ></a>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Nabin</td>
+                <td>nabin@gmail.com</td>
+                <td>9876875432</td>
+                <td>
+                    <a href="#"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <a href="#"
+                    ><i class="fa fa-trash delete" aria-hidden="true"></i
+                    ></a>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Nabin</td>
+                <td>nabin@gmail.com</td>
+                <td>9876875432</td>
+                <td>
+                    <a href="#"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <a href="#"
+                    ><i class="fa fa-trash delete" aria-hidden="true"></i
+                    ></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

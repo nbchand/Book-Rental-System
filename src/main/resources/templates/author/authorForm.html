@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/formButton.css}"/>
+    <link rel="stylesheet" th:href="@{~/css/author/authorForm.css}"/>
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Author Setup</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/author}">Back</a>
+    </div>
+    <div class="form-container">
+        <form>
+            <div class="name-email">
+                <div>
+                    <label for="authName">Name:</label>
+                    <input
+                            id="authName"
+                            type="text"
+                            placeholder="Author Name"
+                            required
+                    />
+                </div>
+                <div>
+                    <label for="authEmail">Email:</label>
+                    <input
+                            id="authEmail"
+                            class="authEmail"
+                            type="email"
+                            placeholder="Author Email"
+                            required
+                    />
+                </div>
+            </div>
+            <div class="auth-number">
+                <label for="authNumber">Mobile Number:</label>
+                <input
+                        id="authNumber"
+                        class="authNumber"
+                        type="text"
+                        placeholder="Author Mobile Number"
+                        required
+                />
+            </div>
+            <div class="formBtn-container">
+                <input type="submit" value="SAVE"/>
+                <input type="reset" value="RESET"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

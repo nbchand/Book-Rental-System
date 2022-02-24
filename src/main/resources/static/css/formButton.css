@@ -1,0 +1,80 @@
+.form-container {
+    position: relative;
+    margin-top: 2.5em;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-bottom: 3em;
+}
+form {
+    width: 100%;
+}
+.btn-container {
+    position: relative;
+    margin-top: 1.5em;
+    left: 81%;
+}
+.btn-container a {
+    position: relative;
+    text-decoration: none;
+    color: #fff7d6;
+    width: 100%;
+    height: 100%;
+    padding: 1rem 1.8rem;
+    background-color: #072448;
+}
+.btn-container a:hover {
+    opacity: 0.9;
+}
+
+form {
+    padding: 2em;
+}
+form label {
+    color: #072448;
+    font-size: 1.2em;
+    font-weight: 800;
+}
+form input[type="text"],
+form input[type="email"] {
+    height: 4em;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    border: 3px solid #00c6be;
+    font-weight: 700;
+    box-sizing: border-box;
+    text-align: center;
+}
+form input[type="text"]:focus,
+form input[type="email"]:focus {
+    border: 3px solid #072448;
+    border-radius: 5px;
+}
+form input[type="submit"],
+form input[type="reset"] {
+    width: 10%;
+    height: 3em;
+    padding: 10px;
+    margin-right: 2em;
+}
+.form-container label {
+    display: block;
+}
+.formBtn-container {
+    position: relative;
+    margin-top: 3em;
+    left: 75%;
+}
+.formBtn-container input{
+    color: #fff7d6;
+    border: none;
+}
+.formBtn-container input[type="submit"]{
+    background-color: #006400;
+}
+.formBtn-container input[type="reset"]{
+    background-color: #DA1212;
+}
+.formBtn-container input:hover{
+    cursor: pointer;
+    opacity: 0.9;
+}

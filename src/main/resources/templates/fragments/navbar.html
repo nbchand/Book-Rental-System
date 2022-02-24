@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="navRequirement">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/1a45a9ad22.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" th:href="@{~/css/style.css}" />
+    </th:block>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div th:fragment="navbar">
+        <nav class="sidebar">
+            <div class="text"><a th:href="@{~/}">Book Rental System</a></div>
+            <ul>
+                <li>
+                    <a href="#" class="master-btn">Master Data
+                        <i class="fas fa-caret-down first"></i>
+                    </a>
+                    <ul class="master-show">
+                        <li><a th:href="@{~/author}">Author Setup</a></li>
+                        <li><a href="#">Category Setup</a></li>
+                        <li><a href="#">Customer Setup</a></li>
+                        <li><a href="#">Book Setup</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="transaction-btn">Transaction
+                        <i class="fas fa-caret-down second"></i>
+                    </a>
+                    <ul class="transaction-show">
+                        <li><a href="#">Rent A Book</a></li>
+                        <li><a href="#">Return A Book</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <script th:src="@{~/js/script.js}"></script>
+    </div>
+</body>
+</html>

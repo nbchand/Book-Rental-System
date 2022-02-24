@@ -1,0 +1,15 @@
+.name-email {
+    display: flex;
+}
+.name-email div{
+    flex-basis: 100%;
+}
+.name-email input{
+    width: 60%;
+}
+form .auth-number{
+    margin-top: 2em;
+}
+form .auth-number input{
+    width: 30%;
+}

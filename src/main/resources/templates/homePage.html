@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/homePage.css}">
+    <title>Book Rental System</title>
+</head>
+<body>
+    <div th:replace="fragments/navbar::navbar"></div>
+    <div class="wrapper">
+        <div class="title-container">
+            <label class="title">Welcome To Book Rental System</label>
+        </div>
+        <div class="img-container"></div>
+    </div>
+</body>
+</html>
