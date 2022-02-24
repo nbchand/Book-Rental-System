@@ -2,13 +2,9 @@ package com.nbchand.brs.entity.book;
 
 import com.nbchand.brs.entity.author.Author;
 import com.nbchand.brs.entity.category.Category;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +19,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,

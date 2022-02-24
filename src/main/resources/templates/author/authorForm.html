@@ -17,7 +17,7 @@
         <a th:href="@{~/author}">Back</a>
     </div>
     <div class="form-container">
-        <form>
+        <form th:method="post" th:action="@{~/author}" th:object="${authorDto}">
             <div class="name-email">
                 <div>
                     <label for="authName">Name:</label>
@@ -26,6 +26,7 @@
                             type="text"
                             placeholder="Author Name"
                             required
+                            th:field="*{name}"
                     />
                 </div>
                 <div>
@@ -36,6 +37,7 @@
                             type="email"
                             placeholder="Author Email"
                             required
+                            th:field="*{email}"
                     />
                 </div>
             </div>
@@ -47,6 +49,7 @@
                         type="text"
                         placeholder="Author Mobile Number"
                         required
+                        th:field="*{mobileNumber}"
                 />
             </div>
             <div class="formBtn-container">

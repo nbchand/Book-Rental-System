@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <div th:replace="fragments/navbar::navRequirement"></div>
-    <link rel="stylesheet" th:href="@{~/css/homePage.css}">
     <link rel="stylesheet" th:href="@{~/css/tableButton.css}">
     <title>Book Rental System</title>
 </head>
@@ -25,67 +24,11 @@
                 <th>Mobile</th>
                 <th>Action</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Nabin</td>
-                <td>nabin@gmail.com</td>
-                <td>9876875432</td>
-                <td>
-                    <a href="#"
-                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
-                    ></a>
-                    <a href="#"
-                    ><i class="fa fa-trash delete" aria-hidden="true"></i
-                    ></a>
-                </td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Nabin</td>
-                <td>nabin@gmail.com</td>
-                <td>9876875432</td>
-                <td>
-                    <a href="#"
-                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
-                    ></a>
-                    <a href="#"
-                    ><i class="fa fa-trash delete" aria-hidden="true"></i
-                    ></a>
-                </td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Nabin</td>
-                <td>nabin@gmail.com</td>
-                <td>9876875432</td>
-                <td>
-                    <a href="#"
-                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
-                    ></a>
-                    <a href="#"
-                    ><i class="fa fa-trash delete" aria-hidden="true"></i
-                    ></a>
-                </td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Nabin</td>
-                <td>nabin@gmail.com</td>
-                <td>9876875432</td>
-                <td>
-                    <a href="#"
-                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
-                    ></a>
-                    <a href="#"
-                    ><i class="fa fa-trash delete" aria-hidden="true"></i
-                    ></a>
-                </td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Nabin</td>
-                <td>nabin@gmail.com</td>
-                <td>9876875432</td>
+            <tr th:each="authorDto, iterator: ${authorDtoList}">
+                <td th:text="${iterator.count}"></td>
+                <td th:text="${authorDto.name}"></td>
+                <td th:text="${authorDto.email}"></td>
+                <td th:text="${authorDto.mobileNumber}"></td>
                 <td>
                     <a href="#"
                     ><i class="fa fa-pencil edit" aria-hidden="true"></i

@@ -1,10 +1,10 @@
-.img-container{
+body{
+    overflow-y: hidden;
+}
+img{
     position: absolute;
-    height: 100%;
+    height: 100vh;
     width: 100%;
-    background-color: #072448;
-    background-image: url(../image/library.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
 }

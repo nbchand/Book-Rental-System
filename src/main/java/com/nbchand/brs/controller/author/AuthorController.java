@@ -1,8 +1,16 @@
 package com.nbchand.brs.controller.author;
 
+import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.service.author.AuthorService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 /**
  * @author Narendra
@@ -12,13 +20,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/author")
 public class AuthorController {
+
+    private AuthorService authorService;
+
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
+
     @GetMapping
-    public String displayAuthorLandingPage(){
+    public String displayAuthorLandingPage(Model model){
+        model.addAttribute("authorDtoList", authorService.findAllEntities());
         return "author/authorLanding";
     }
     @GetMapping("/add-author")
-    public String displayAuthorForm(){
+    public String displayAuthorForm(Model model){
+        model.addAttribute("authorDto", new AuthorDto());
         return "author/authorForm";
     }
 
+    @PostMapping
+    public String addAuthor(@Valid @ModelAttribute("authorDto") AuthorDto authorDto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "redirect:/author";
+        }
+        authorService.saveEntity(authorDto);
+        return "redirect:/author";
+    }
 }
