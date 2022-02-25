@@ -30,6 +30,11 @@ public class AuthorServiceImpl implements AuthorService {
                 .mobileNumber(authorDto.getMobileNumber())
                 .name(authorDto.getName())
                 .build();
+        if(authorDto.getId()==null){
+            authorRepo.save(author);
+            return;
+        }
+        author.setId(authorDto.getId());
         authorRepo.save(author);
     }
 
@@ -55,6 +60,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .email(author.getEmail())
                 .name(author.getName())
                 .mobileNumber(author.getMobileNumber())
+                .id(author.getId())
                 .build();
         return authorDto;
     }

@@ -79,3 +79,19 @@ td .delete:hover {
     padding: 1rem;
     text-align: center;
 }
+
+.error-message-container{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    background: #EF6D6D;
+    text-align: center;
+    margin-left: 35%;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    width: 20%;
+}
+.error-message, .error-message-container a{
+    font-weight: 500;
+    color: #072448;
+}

@@ -1,19 +1,10 @@
-//deletes review
+//submits delete author form
 $('.del').on('click',function(event){
     event.preventDefault();
-    const id = this.id;
-    fetch("/author/"+id, {
-        method: 'DELETE',
-    })
-        .then(response => response.text())
-        .then(data => {
-            if(data=="failed"){
-                location.href = "/";
-            }
-            location.href = "/author";
-            console.log(data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    $('.delete-form').submit();
+})
+//closes error message
+$('.cross').on('click',function(event){
+    event.preventDefault();
+    $('.error-message-container').hide();
 })

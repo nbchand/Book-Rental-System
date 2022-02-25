@@ -78,3 +78,18 @@ form input[type="reset"] {
     cursor: pointer;
     opacity: 0.9;
 }
+.error-message-container{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    background: #EF6D6D;
+    text-align: center;
+    margin-left: 25%;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    width: 30%;
+}
+.error-message, .error-message-container a{
+    font-weight: 500;
+    color: #072448;
+}

@@ -2,7 +2,9 @@ package com.nbchand.brs.dto.author;
 
 import lombok.*;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * @author Narendra
@@ -16,11 +18,17 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @ToString
 public class AuthorDto {
+
     private Integer id;
-    @NotEmpty(message = "Name of the author must not be empty")
+
+    @NotEmpty(message = "Author name must not be empty")
     private String name;
-    @NotEmpty(message = "Email of the author must not be empty")
+
+    @NotEmpty(message = "Author email must not be empty")
+    @Email(message = "Author email invalid")
     private String email;
-    @NotEmpty(message = "Mobile Number of the author must not be empty")
+
+    @NotEmpty(message = "Author mobile number must not be empty")
+    @Pattern(regexp = "^\\d{10}$", message = "Mobile number must be of 10 digits")
     private String mobileNumber;
 }

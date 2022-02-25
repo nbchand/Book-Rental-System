@@ -16,8 +16,12 @@
     <div class="btn-container">
         <a th:href="@{~/author}">Back</a>
     </div>
-    <div class="form-container">
-        <form th:method="post" th:action="@{~/author}" th:object="${authorDto}">
+    <div class="form-container" th:object="${authorDto}">
+        <div class="error-message-container" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
+            <div class="error-message" th:text="${err}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        <form th:method="${authorDto.id}==null ? 'post' : 'put'" th:action="${authorDto.id}==null ? @{~/author} : @{~/author/}+${authorDto.id}" th:object="${authorDto}">
             <div class="name-email">
                 <div>
                     <label for="authName">Name:</label>
@@ -27,6 +31,7 @@
                             placeholder="Author Name"
                             required
                             th:field="*{name}"
+                            th:value="${authorDto.name}"
                     />
                 </div>
                 <div>
@@ -38,6 +43,7 @@
                             placeholder="Author Email"
                             required
                             th:field="*{email}"
+                            th:value="${authorDto.email}"
                     />
                 </div>
             </div>
@@ -50,6 +56,7 @@
                         placeholder="Author Mobile Number"
                         required
                         th:field="*{mobileNumber}"
+                        th:value="${authorDto.mobileNumber}"
                 />
             </div>
             <div class="formBtn-container">
@@ -60,6 +67,6 @@
     </div>
 </div>
 
-<script src="script.js"></script>
+<script th:src="@{~/js/author/authorForm.js}"></script>
 </body>
 </html>

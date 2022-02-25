@@ -16,6 +16,10 @@
         <a th:href="@{~/author/add-author}">Add author</a>
     </div>
     <div class="table-container">
+        <div class="error-message-container" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
         <div class="message" th:if="${authorDtoList.isEmpty()}">No authors added</div>
         <table th:unless="${authorDtoList.isEmpty()}">
             <tr>
@@ -34,9 +38,9 @@
                     <a class="edit" th:href="@{~/author/edit/}+${authorDto.id}"
                     ><i class="fa fa-pencil edit" aria-hidden="true"></i
                     ></a>
-                    <a href="#" class="del" th:id="${authorDto.id}"
-                    ><i class="fa fa-trash delete" aria-hidden="true"></i
-                    ></a>
+                    <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/author/}+${authorDto.id}">
+                        <a href="#" class="del" th:id="${authorDto.id}"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+                    </form>
                 </td>
             </tr>
         </table>
