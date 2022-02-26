@@ -89,7 +89,6 @@ public class AuthorController {
         }
         ResponseDto responseDto = authorService.saveEntity(authorDto);
         if (responseDto.isStatus()) {
-            authorService.saveEntity(authorDto);
             redirectAttributes.addFlashAttribute("errorMessage", "Author updated successfully");
             return "redirect:/author";
         }
