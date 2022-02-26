@@ -1,7 +1,7 @@
 package com.nbchand.brs.controller.author;
 
 import com.nbchand.brs.dto.author.AuthorDto;
-import com.nbchand.brs.entity.author.Author;
+import com.nbchand.brs.dto.response.ResponseDto;
 import com.nbchand.brs.service.author.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,9 +47,13 @@ public class AuthorController {
             model.addAttribute("authorDto", authorDto);
             return "author/authorForm";
         }
-        authorService.saveEntity(authorDto);
-        redirectAttributes.addFlashAttribute("errorMessage", "Author added successfully");
-        return "redirect:/author";
+        ResponseDto responseDto = authorService.saveEntity(authorDto);
+        if(responseDto.isStatus()){
+            redirectAttributes.addFlashAttribute("errorMessage", "Author added successfully");
+            return "redirect:/author";
+        }
+        model.addAttribute("errorMessage", responseDto.getMessage());
+        return "author/authorForm";
     }
 
     @DeleteMapping("/{id}")

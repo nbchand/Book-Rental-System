@@ -16,11 +16,19 @@
     <div class="btn-container">
         <a th:href="@{~/author}">Back</a>
     </div>
+
     <div class="form-container" th:object="${authorDto}">
-        <div class="error-message-container" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
+
+        <div class="error-message-container database-error" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <div class="error-message-container dto-validation-error" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
             <div class="error-message" th:text="${err}"></div>
             <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
         </div>
+
         <form th:method="${authorDto.id}==null ? 'post' : 'put'" th:action="${authorDto.id}==null ? @{~/author} : @{~/author/}+${authorDto.id}" th:object="${authorDto}">
             <div class="name-email">
                 <div>

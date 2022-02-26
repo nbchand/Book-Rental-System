@@ -39,7 +39,7 @@
                     ><i class="fa fa-pencil edit" aria-hidden="true"></i
                     ></a>
                     <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/author/}+${authorDto.id}">
-                        <a href="#" class="del" th:id="${authorDto.id}"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+                        <a href="#" class="del" th:id="${authorDto.id}" onclick="$(this).parent().submit();"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
                     </form>
                 </td>
             </tr>

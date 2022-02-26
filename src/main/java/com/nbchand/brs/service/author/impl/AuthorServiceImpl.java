@@ -1,6 +1,7 @@
 package com.nbchand.brs.service.author.impl;
 
 import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.response.ResponseDto;
 import com.nbchand.brs.entity.author.Author;
 import com.nbchand.brs.repository.author.AuthorRepo;
 import com.nbchand.brs.service.author.AuthorService;
@@ -24,18 +25,26 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void saveEntity(AuthorDto authorDto) {
+    public ResponseDto saveEntity(AuthorDto authorDto) {
         Author author = Author.builder()
                 .email(authorDto.getEmail())
                 .mobileNumber(authorDto.getMobileNumber())
                 .name(authorDto.getName())
                 .build();
-        if(authorDto.getId()==null){
-            authorRepo.save(author);
-            return;
+        if (authorDto.getId() != null) {
+            author.setId(authorDto.getId());
         }
-        author.setId(authorDto.getId());
-        authorRepo.save(author);
+
+        try {
+            authorRepo.save(author);
+            return new ResponseDto(true, null);
+        } catch (Exception exception) {
+            if (exception.getMessage().contains("mobile")) {
+                return new ResponseDto(false, "Mobile number already in use");
+            } else {
+                return new ResponseDto(false, "Email address already in use");
+            }
+        }
     }
 
     @Override

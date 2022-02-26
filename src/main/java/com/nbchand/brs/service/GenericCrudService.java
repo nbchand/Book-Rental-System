@@ -1,6 +1,7 @@
 package com.nbchand.brs.service;
 
 import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.response.ResponseDto;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @since 2022-02-24
  */
 public interface GenericCrudService<T> {
-    public void saveEntity(T t);
+    public ResponseDto saveEntity(T t);
     public List<T> findAllEntities();
     public T findEntityById(Integer id);
     public void deleteEntityById(Integer id);
