@@ -3,13 +3,17 @@ package com.nbchand.brs.entity.category;
 import lombok.*;
 
 import javax.persistence.*;
+
 /**
  * @author Narendra
  * @version 1.0
  * @since 2022-02-24
  */
 @Entity
-@Table(name = "tbl_category")
+@Table(name = "tbl_category",
+        uniqueConstraints =
+        @UniqueConstraint(name = "UK_Category_Name", columnNames = {"name"})
+)
 @Getter
 @Setter
 @AllArgsConstructor
