@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/tableButton.css}">
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Category Setup</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/category/add-category}">Add category</a>
+    </div>
+    <div class="table-container">
+        <div class="error-message-container" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        <div class="message" th:if="${categoryDtoList.isEmpty()}">No categories added</div>
+        <table th:unless="${categoryDtoList.isEmpty()}">
+            <tr>
+                <th>S.N</th>
+                <th>Category name</th>
+                <th>Category Description</th>
+                <th>Action</th>
+            </tr>
+            <tr th:each="categoryDto, iterator: ${categoryDtoList}">
+                <td th:text="${iterator.count}"></td>
+                <td th:text="${categoryDto.name}"></td>
+                <td th:text="${categoryDto.description}"></td>
+                <td>
+                    <a class="edit" th:href="@{~/category/edit/}+${categoryDto.id}"
+                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
+                    ></a>
+                    <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/category/}+${categoryDto.id}">
+                        <a href="#" class="del" th:id="${categoryDto.id}" onclick="$(this).parent().submit();"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script th:src="@{~/js/author/authorLanding.js}"></script>
+</body>
+</html>

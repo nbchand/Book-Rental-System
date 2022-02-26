@@ -1,0 +1,19 @@
+#categoryName{
+    width: 30%;
+}
+.cat-desc{
+    margin-top: 2em;
+}
+form textarea{
+    height: 10em;
+    width: 40%;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    border: 3px solid #00c6be;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+form textarea:focus{
+    border: 3px solid #072448;
+    border-radius: 5px;
+}
