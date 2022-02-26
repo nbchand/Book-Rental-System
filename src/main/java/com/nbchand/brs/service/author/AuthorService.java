@@ -3,8 +3,6 @@ package com.nbchand.brs.service.author;
 import com.nbchand.brs.dto.author.AuthorDto;
 import com.nbchand.brs.service.GenericCrudService;
 
-import java.util.List;
-
 /**
  * @author Narendra
  * @version 1.0

@@ -3,6 +3,7 @@ package com.nbchand.brs.entity.author;
 import lombok.*;
 
 import javax.persistence.*;
+
 /**
  * @author Narendra
  * @version 1.0
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tbl_author", uniqueConstraints = {
         @UniqueConstraint(name = "UK_Author_Email", columnNames = {"email"}),
-        @UniqueConstraint(name = "UK_Author_Mobile",columnNames = {"mobileNumber"})
+        @UniqueConstraint(name = "UK_Author_Mobile", columnNames = {"mobileNumber"})
 })
 @Getter
 @Setter

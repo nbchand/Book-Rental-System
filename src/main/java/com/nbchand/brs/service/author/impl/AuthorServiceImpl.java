@@ -72,7 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public ResponseDto findEntityById(Integer id) {
-        try{
+        try {
             Author author = authorRepo.getById(id);
             AuthorDto authorDto = AuthorDto.builder()
                     .email(author.getEmail())
@@ -84,8 +84,7 @@ public class AuthorServiceImpl implements AuthorService {
                     .status(true)
                     .authorDto(authorDto)
                     .build();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Author not found")
@@ -96,13 +95,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public ResponseDto deleteEntityById(Integer id) {
-        try{
+        try {
             authorRepo.deleteById(id);
             return ResponseDto.builder()
                     .status(true)
                     .message("Author deleted successfully")
                     .build();
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Author not found")

@@ -48,7 +48,7 @@ public class AuthorController {
             return "author/authorForm";
         }
         ResponseDto responseDto = authorService.saveEntity(authorDto);
-        if(responseDto.isStatus()){
+        if (responseDto.isStatus()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Author added successfully");
             return "redirect:/author";
         }
@@ -67,13 +67,13 @@ public class AuthorController {
     @GetMapping("/edit/{id}")
     public String displayAuthorEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
-            ResponseDto responseDto = authorService.findEntityById(id);
-            if(responseDto.isStatus()){
-                model.addAttribute("authorDto", responseDto.getAuthorDto());
-                return "author/authorForm";
-            }
-            redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
-            return "redirect:/author";
+        ResponseDto responseDto = authorService.findEntityById(id);
+        if (responseDto.isStatus()) {
+            model.addAttribute("authorDto", responseDto.getAuthorDto());
+            return "author/authorForm";
+        }
+        redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
+        return "redirect:/author";
     }
 
     @PutMapping("/{id}")
@@ -83,12 +83,12 @@ public class AuthorController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
         authorDto.setId(id);
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             model.addAttribute("authorDto", authorDto);
             return "author/authorForm";
         }
         ResponseDto responseDto = authorService.saveEntity(authorDto);
-        if(responseDto.isStatus()){
+        if (responseDto.isStatus()) {
             authorService.saveEntity(authorDto);
             redirectAttributes.addFlashAttribute("errorMessage", "Author updated successfully");
             return "redirect:/author";

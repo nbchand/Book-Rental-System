@@ -11,7 +11,10 @@ import java.util.List;
  */
 public interface GenericCrudService<T> {
     public ResponseDto saveEntity(T t);
+
     public List<T> findAllEntities();
+
     public ResponseDto findEntityById(Integer id);
+
     public ResponseDto deleteEntityById(Integer id);
 }
