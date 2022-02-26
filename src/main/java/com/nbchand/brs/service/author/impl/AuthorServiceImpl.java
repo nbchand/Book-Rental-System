@@ -37,19 +37,16 @@ public class AuthorServiceImpl implements AuthorService {
 
         try {
             authorRepo.save(author);
-//            return new ResponseDto(true, null);
             return ResponseDto.builder()
                     .status(true)
                     .build();
         } catch (Exception exception) {
             if (exception.getMessage().contains("mobile")) {
-//                return new ResponseDto(false, "Mobile number already in use");
                 return ResponseDto.builder()
                         .status(false)
                         .message("Mobile number already in use")
                         .build();
             } else {
-//                return new ResponseDto(false, "Email address already in use");
                 return ResponseDto.builder()
                         .status(false)
                         .message("Email address already in use")
@@ -101,13 +98,11 @@ public class AuthorServiceImpl implements AuthorService {
     public ResponseDto deleteEntityById(Integer id) {
         try{
             authorRepo.deleteById(id);
-//            return new ResponseDto(true, "Author deleted successfully");
             return ResponseDto.builder()
                     .status(true)
                     .message("Author deleted successfully")
                     .build();
         }catch (Exception exception){
-//            return new ResponseDto(false, "Author not found");
             return ResponseDto.builder()
                     .status(false)
                     .message("Author not found")
