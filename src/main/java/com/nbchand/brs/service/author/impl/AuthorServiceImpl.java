@@ -37,12 +37,23 @@ public class AuthorServiceImpl implements AuthorService {
 
         try {
             authorRepo.save(author);
-            return new ResponseDto(true, null);
+//            return new ResponseDto(true, null);
+            return ResponseDto.builder()
+                    .status(true)
+                    .build();
         } catch (Exception exception) {
             if (exception.getMessage().contains("mobile")) {
-                return new ResponseDto(false, "Mobile number already in use");
+//                return new ResponseDto(false, "Mobile number already in use");
+                return ResponseDto.builder()
+                        .status(false)
+                        .message("Mobile number already in use")
+                        .build();
             } else {
-                return new ResponseDto(false, "Email address already in use");
+//                return new ResponseDto(false, "Email address already in use");
+                return ResponseDto.builder()
+                        .status(false)
+                        .message("Email address already in use")
+                        .build();
             }
         }
     }
@@ -63,24 +74,44 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDto findEntityById(Integer id) {
-        Author author = authorRepo.getById(id);
-        AuthorDto authorDto = AuthorDto.builder()
-                .email(author.getEmail())
-                .name(author.getName())
-                .mobileNumber(author.getMobileNumber())
-                .id(author.getId())
-                .build();
-        return authorDto;
+    public ResponseDto findEntityById(Integer id) {
+        try{
+            Author author = authorRepo.getById(id);
+            AuthorDto authorDto = AuthorDto.builder()
+                    .email(author.getEmail())
+                    .name(author.getName())
+                    .mobileNumber(author.getMobileNumber())
+                    .id(author.getId())
+                    .build();
+            return ResponseDto.builder()
+                    .status(true)
+                    .authorDto(authorDto)
+                    .build();
+        }
+        catch (Exception e){
+            return ResponseDto.builder()
+                    .status(false)
+                    .message("Author not found")
+                    .build();
+        }
+
     }
 
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try{
             authorRepo.deleteById(id);
-            return new ResponseDto(true, "Author deleted successfully");
+//            return new ResponseDto(true, "Author deleted successfully");
+            return ResponseDto.builder()
+                    .status(true)
+                    .message("Author deleted successfully")
+                    .build();
         }catch (Exception exception){
-            return new ResponseDto(false, "Author not found");
+//            return new ResponseDto(false, "Author not found");
+            return ResponseDto.builder()
+                    .status(false)
+                    .message("Author not found")
+                    .build();
         }
     }
 }

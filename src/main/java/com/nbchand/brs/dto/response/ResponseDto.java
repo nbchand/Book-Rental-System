@@ -1,5 +1,6 @@
 package com.nbchand.brs.dto.response;
 
+import com.nbchand.brs.dto.author.AuthorDto;
 import lombok.*;
 
 /**
@@ -16,4 +17,5 @@ import lombok.*;
 public class ResponseDto {
     private boolean status;
     private String message;
+    private AuthorDto authorDto;
 }

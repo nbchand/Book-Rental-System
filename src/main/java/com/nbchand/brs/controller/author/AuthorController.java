@@ -67,14 +67,13 @@ public class AuthorController {
     @GetMapping("/edit/{id}")
     public String displayAuthorEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
-        try {
-            AuthorDto authorDto = authorService.findEntityById(id);
-            model.addAttribute("authorDto", authorDto);
-            return "author/authorForm";
-        } catch (Exception exception) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Author not found");
+            ResponseDto responseDto = authorService.findEntityById(id);
+            if(responseDto.isStatus()){
+                model.addAttribute("authorDto", responseDto.getAuthorDto());
+                return "author/authorForm";
+            }
+            redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
             return "redirect:/author";
-        }
     }
 
     @PutMapping("/{id}")
