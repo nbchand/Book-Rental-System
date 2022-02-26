@@ -83,21 +83,19 @@ public class AuthorController {
                                BindingResult bindingResult,
                                Model model,
                                RedirectAttributes redirectAttributes) {
-        try {
-            //just to check whether author with given id is present or not
-            AuthorDto authorDto1 = authorService.findEntityById(id);
-            authorDto.setId(id);
-            if(bindingResult.hasErrors()){
-                model.addAttribute("authorDto", authorDto);
-                return "author/authorForm";
-            }
+        authorDto.setId(id);
+        if(bindingResult.hasErrors()){
+            model.addAttribute("authorDto", authorDto);
+            return "author/authorForm";
+        }
+        ResponseDto responseDto = authorService.saveEntity(authorDto);
+        if(responseDto.isStatus()){
             authorService.saveEntity(authorDto);
             redirectAttributes.addFlashAttribute("errorMessage", "Author updated successfully");
             return "redirect:/author";
-        } catch (Exception exception) {
-            //if author is not present this code executes
-            redirectAttributes.addFlashAttribute("errorMessage", "Author not found");
-            return "redirect:/author";
         }
+        model.addAttribute("errorMessage", responseDto.getMessage());
+        model.addAttribute("authorDto", authorDto);
+        return "author/authorForm";
     }
 }
