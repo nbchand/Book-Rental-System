@@ -75,7 +75,12 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteEntityById(Integer id) {
-        authorRepo.deleteById(id);
+    public ResponseDto deleteEntityById(Integer id) {
+        try{
+            authorRepo.deleteById(id);
+            return new ResponseDto(true, "Author deleted successfully");
+        }catch (Exception exception){
+            return new ResponseDto(false, "Author not found");
+        }
     }
 }

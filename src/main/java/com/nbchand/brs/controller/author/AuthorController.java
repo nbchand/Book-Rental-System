@@ -59,15 +59,9 @@ public class AuthorController {
     @DeleteMapping("/{id}")
     public String deleteAuthor(@PathVariable("id") Integer id,
                                RedirectAttributes redirectAttributes) {
-        try {
-            AuthorDto authorDto = authorService.findEntityById(id);
-            authorService.deleteEntityById(id);
-            redirectAttributes.addFlashAttribute("errorMessage", "Author deleted successfully");
-            return "redirect:/author";
-        } catch (Exception exception) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Author could not be deleted");
-            return "redirect:/author";
-        }
+        ResponseDto responseDto = authorService.deleteEntityById(id);
+        redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
+        return "redirect:/author";
     }
 
     @GetMapping("/edit/{id}")

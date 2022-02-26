@@ -14,5 +14,5 @@ public interface GenericCrudService<T> {
     public ResponseDto saveEntity(T t);
     public List<T> findAllEntities();
     public T findEntityById(Integer id);
-    public void deleteEntityById(Integer id);
+    public ResponseDto deleteEntityById(Integer id);
 }
