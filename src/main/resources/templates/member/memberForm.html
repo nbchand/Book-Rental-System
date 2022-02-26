@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/formButton.css}"/>
+    <link rel="stylesheet" th:href="@{~/css/member/memberForm.css}"/>
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Member Setup</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/member}">Back</a>
+    </div>
+
+    <div class="form-container" th:object="${memberDto}">
+
+        <div class="error-message-container database-error" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <div class="error-message-container dto-validation-error" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
+            <div class="error-message" th:text="${err}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <form th:method="${memberDto.id}==null ? 'post' : 'put'" th:action="${memberDto.id}==null ? @{~/member} : @{~/member/}+${memberDto.id}" th:object="${memberDto}">
+            <div class="binder">
+                <div>
+                    <label for="mem-name">Name:</label>
+                    <input
+                            id="mem-name"
+                            type="text"
+                            placeholder="Member Name"
+                            required
+                            th:field="*{name}"
+                            th:value="${memberDto.name}"
+                    />
+                </div>
+                <div>
+                    <label for="mem-email">Email:</label>
+                    <input
+                            id="mem-email"
+                            type="email"
+                            placeholder="Member Email"
+                            required
+                            th:field="*{email}"
+                            th:value="${memberDto.email}"
+                    />
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="mem-number">Mobile Number:</label>
+                    <input
+                            id="mem-number"
+                            type="text"
+                            placeholder="Member Mobile Number"
+                            required
+                            th:field="*{mobileNumber}"
+                            th:value="${memberDto.mobileNumber}"
+                    />
+                </div>
+                <div>
+                    <label for="mem-address">Address:</label>
+                    <input
+                            id="mem-address"
+                            type="text"
+                            placeholder="Member Address"
+                            required
+                            th:field="*{address}"
+                            th:value="${memberDto.address}"
+                    />
+                </div>
+            </div>
+            <div class="formBtn-container">
+                <input type="submit" value="SAVE"/>
+                <input type="reset" value="RESET"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{~/js/common.js}"></script>
+</body>
+</html>

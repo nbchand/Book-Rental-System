@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <div th:replace="fragments/navbar::navRequirement"></div>
+  <link rel="stylesheet" th:href="@{~/css/tableButton.css}">
+  <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+  <div class="title-container">
+    <label class="title">Member Setup</label>
+  </div>
+  <div class="btn-container">
+    <a th:href="@{~/member/add-member}">Add member</a>
+  </div>
+  <div class="table-container">
+    <div class="error-message-container" th:if="${errorMessage}">
+      <div class="error-message" th:text="${errorMessage}"></div>
+      <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+    </div>
+    <div class="message" th:if="${memberDtoList.isEmpty()}">No members added</div>
+    <table th:unless="${memberDtoList.isEmpty()}">
+      <tr>
+        <th>S.N</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>Address</th>
+        <th>Action</th>
+      </tr>
+      <tr th:each="memberDto, iterator: ${memberDtoList}">
+        <td th:text="${iterator.count}"></td>
+        <td th:text="${memberDto.name}"></td>
+        <td th:text="${memberDto.email}"></td>
+        <td th:text="${memberDto.mobileNumber}"></td>
+        <td th:text="${memberDto.address}"></td>
+        <td>
+          <a class="edit" th:href="@{~/member/edit/}+${memberDto.id}"
+          ><i class="fa fa-pencil edit" aria-hidden="true"></i
+          ></a>
+          <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/member/}+${memberDto.id}">
+            <a href="#" class="del" onclick="$(this).parent().submit();"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script th:src="@{~/js/common.js}"></script>
+</body>
+</html>

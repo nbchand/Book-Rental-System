@@ -1,0 +1,12 @@
+.binder {
+    display: flex;
+}
+.binder div{
+    flex-basis: 100%;
+}
+.binder input{
+    width: 60%;
+}
+.binder-bottom{
+    margin-top: 2em;
+}

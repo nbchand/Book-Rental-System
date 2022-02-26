@@ -2,6 +2,7 @@ package com.nbchand.brs.dto.response;
 
 import com.nbchand.brs.dto.author.AuthorDto;
 import com.nbchand.brs.dto.category.CategoryDto;
+import com.nbchand.brs.dto.member.MemberDto;
 import lombok.*;
 
 /**
@@ -20,4 +21,5 @@ public class ResponseDto {
     private String message;
     private AuthorDto authorDto;
     private CategoryDto categoryDto;
+    private MemberDto memberDto;
 }

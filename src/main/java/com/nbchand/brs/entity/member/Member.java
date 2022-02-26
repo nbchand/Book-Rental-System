@@ -9,7 +9,10 @@ import javax.persistence.*;
  * @since 2022-02-24
  */
 @Entity
-@Table(name = "tbl_member")
+@Table(name = "tbl_member", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_Member_Email", columnNames = {"email"}),
+        @UniqueConstraint(name = "UK_Member_Mobile", columnNames = {"mobileNumber"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
