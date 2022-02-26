@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * @author Narendra
@@ -22,6 +23,7 @@ public class AuthorDto {
     private Integer id;
 
     @NotEmpty(message = "Author name must not be empty")
+    @Size(max = 80, message = "Author name can only be upto 80 characters")
     private String name;
 
     @NotEmpty(message = "Author email must not be empty")
