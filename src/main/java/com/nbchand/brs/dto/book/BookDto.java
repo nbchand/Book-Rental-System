@@ -1,0 +1,94 @@
+package com.nbchand.brs.dto.book;
+
+import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.category.CategoryDto;
+import com.nbchand.brs.entity.author.Author;
+import com.nbchand.brs.entity.category.Category;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @author Narendra
+ * @version 1.0
+ * @since 2022-02-27
+ */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class BookDto {
+
+    private Integer id;
+
+    @NotEmpty(message = "Book name must not be empty")
+    private String name;
+
+    @NotEmpty(message = "Number of book pages must not be empty")
+    @Min(value = 1, message = "Book must have at least 1 page")
+    private Integer numberOfPages;
+
+    @NotEmpty(message = "Book ISBN must not be empty")
+    private String isbn;
+
+    @NotEmpty(message = "Book rating must not be empty")
+    private Double rating;
+
+    @NotEmpty(message = "Book stock count must not be empty")
+    @Min(value = 0, message = "Stock count can't be negative")
+    private Integer stockCount;
+
+    @NotEmpty(message = "Please provide a valid date")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", message = "Date format must be \"yyyy-MM-dd\" ")
+    private String publishedDateString;
+
+    private Date publishedDate;
+
+    @NotEmpty(message = "Book photo can't be empty")
+    private MultipartFile photo;
+
+    private String photoLocation;
+
+    @NotEmpty(message = "Book category can't be empty")
+    private Integer categoryId;
+
+    private CategoryDto categoryDto;
+
+    @NotEmpty(message = "Book authors can't be empty")
+    List<Integer> authorIds;
+
+    private List<AuthorDto> authorDtoList;
+
+    public static class BookDtoBuilder {
+        public BookDtoBuilder categoryDto(Category category) {
+
+            this.categoryDto = CategoryDto.builder()
+                    .id(category.getId())
+                    .name(category.getName())
+                    .description(category.getDescription())
+                    .build();
+            return this;
+        }
+
+        public BookDtoBuilder authorDtoList(List<Author> authors) {
+
+            this.authorDtoList = authors.stream().map(author ->
+                    AuthorDto.builder()
+                            .id(author.getId())
+                            .name(author.getName())
+                            .email(author.getEmail())
+                            .mobileNumber(author.getMobileNumber())
+                            .build()
+            ).collect(Collectors.toList());
+
+            return this;
+        }
+    }
+}

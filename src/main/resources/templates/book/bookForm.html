@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/formButton.css}"/>
+    <link rel="stylesheet" th:href="@{~/css/book/bookForm.css}"/>
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Book Setup</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/book}">Back</a>
+    </div>
+
+    <div class="form-container">
+
+        <div class="error-message-container database-error" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <div class="error-message-container dto-validation-error" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
+            <div class="error-message" th:text="${err}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <form enctype="multipart/form-data" th:method="${bookDto.id}==null ? 'post' : 'put'" th:action="${bookDto.id}==null ? @{~/book} : @{~/book/}+${bookDto.id}" th:object="${bookDto}">
+            <div class="binder">
+                <div>
+                    <label for="book-category">Category:</label>
+                    <select id="book-category" th:field="*{categoryId}">
+                        <option selected th:value="${null}">Select a category</option>
+                        <option th:each="category : ${allCategories}" th:text="${category.name}"
+                                th:value="${category.id}"
+                        ></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="book-author">Author:</label>
+                        <select id="book-author" multiple th:field="*{authorIds}">
+                            <option th:each="author : ${allAuthors}" th:text="${author.name}"
+                                    th:value="${author.id}"
+                            ></option>
+                        </select>
+                </div>
+                <div>
+                    <label for="book-name">Name:</label>
+                    <input
+                            id="book-name"
+                            type="text"
+                            placeholder="Book Name"
+                            required
+                            th:field="*{name}"
+                            th:value="*{name}"
+                    />
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="book-published-date">Published Date:</label>
+                    <input
+                            id="book-published-date"
+                            type="date"
+                            th:max="${dateToday}"
+                            required
+                            th:field="*{publishedDateString}"
+                            th:value="*{publishedDateString}"
+                    />
+                </div>
+                <div>
+                    <label for="book-isbn">ISBN:</label>
+                    <input
+                            id="book-isbn"
+                            type="text"
+                            placeholder="Book ISBN"
+                            required
+                            th:field="*{isbn}"
+                            th:value="*{isbn}"
+                    />
+                </div>
+                <div>
+                    <label for="book-pages">Number of Pages:</label>
+                    <input
+                            id="book-pages"
+                            type="number"
+                            placeholder="Book Pages"
+                            required
+                            th:field="*{numberOfPages}"
+                            th:value="*{numberOfPages}"
+                    />
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="book-rating">Rating:</label>
+                    <input
+                            id="book-rating"
+                            type="number"
+                            step="any"
+                            min="0"
+                            max="5"
+                            placeholder="Book Rating"
+                            required
+                            th:field="*{rating}"
+                            th:value="*{rating}"
+                    />
+                </div>
+                <div>
+                    <label for="book-stock">Stock:</label>
+                    <input
+                            id="book-stock"
+                            type="number"
+                            min="0"
+                            placeholder="Book Stock"
+                            required
+                            th:field="*{stockCount}"
+                            th:value="*{stockCount}"
+                    />
+                </div>
+                <div>
+                    <label for="book-photo">Photo:</label>
+                    <input
+                            id="book-photo"
+                            type="file"
+                            required
+                            th:field="*{photo}"
+                            th:value="*{photo}"
+                    />
+                </div>
+            </div>
+            <div class="formBtn-container">
+                <input type="submit" value="SAVE"/>
+                <input type="reset" value="RESET"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{~/js/common.js}"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+.binder {
+    display: flex;
+}
+.binder div{
+    flex-basis: 100%;
+}
+.binder input{
+    width: 60%;
+}
+.binder-bottom{
+    margin-top: 2em;
+}
+select, form input[type="date"],
+form input[type="number"] {
+    height: 4em;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    border: 3px solid #00c6be;
+    font-weight: 700;
+    box-sizing: border-box;
+    text-align: center;
+}
+#book-author{
+    height: 10em;
+}
+form input[type="file"] {
+    color: #072448;
+}

@@ -11,7 +11,7 @@
     <groupId>com.nbchand</groupId>
     <artifactId>brs</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Book Renting System</name>
+    <name>Book Rental System</name>
     <description>Book Renting System</description>
     <properties>
         <java.version>11</java.version>

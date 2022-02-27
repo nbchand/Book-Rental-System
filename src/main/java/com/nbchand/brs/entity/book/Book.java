@@ -14,7 +14,10 @@ import java.util.List;
  * @since 2022-02-24
  */
 @Entity
-@Table(name = "tbl_book")
+@Table(name = "tbl_book", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_Book_Name", columnNames = {"name"}),
+        @UniqueConstraint(name = "UK_Book_Isbn", columnNames = {"isbn"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
