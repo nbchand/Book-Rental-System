@@ -133,6 +133,9 @@ public class BookServiceImpl implements BookService {
                     .numberOfPages(book.getNumberOfPages())
                     .categoryDto(book.getCategory())
                     .authorDtoList(book.getAuthors())
+                    .categoryId(book.getCategory().getId())
+                    .authorIds(book.getAuthors().stream().map(author ->
+                            author.getId()).collect(Collectors.toList()))
                     .isbn(book.getIsbn())
                     .publishedDateString(dateService.getDateString(book.getPublishedDate()))
                     .stockCount(book.getStockCount())
@@ -153,7 +156,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseDto deleteEntityById(Integer id) {
-        return null;
+        try {
+            Book book = bookRepo.getById(id);
+            File photo = new File(book.getPhoto());
+            log.info("Book Deletion: " + photo.delete());
+            bookRepo.deleteById(id);
+            return ResponseDto.builder()
+                    .status(true)
+                    .message("Book deleted successfully")
+                    .build();
+        } catch (Exception exception) {
+            return ResponseDto.builder()
+                    .status(false)
+                    .message("Book not found")
+                    .build();
+        }
     }
 
     @Override

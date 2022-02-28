@@ -1,6 +1,5 @@
 package com.nbchand.brs.controller.book;
 
-import com.nbchand.brs.dto.author.AuthorDto;
 import com.nbchand.brs.dto.book.BookDto;
 import com.nbchand.brs.dto.response.ResponseDto;
 import com.nbchand.brs.service.author.AuthorService;
@@ -121,5 +120,13 @@ public class BookController {
         model.addAttribute("dateToday", dateService.getTodayDateString());
         model.addAttribute("bookDto", bookDto);
         return "author/authorForm";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable("id") Integer id,
+                               RedirectAttributes redirectAttributes) {
+        ResponseDto responseDto = bookService.deleteEntityById(id);
+        redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
+        return "redirect:/book";
     }
 }
