@@ -1,5 +1,7 @@
 package com.nbchand.brs.service.date;
 
+import java.util.Date;
+
 /**
  * @author Narendra
  * @version 1.0
@@ -8,4 +10,5 @@ package com.nbchand.brs.service.date;
 public interface DateService {
     public String getTodayDateString();
 
+    public String getDateString(Date date);
 }

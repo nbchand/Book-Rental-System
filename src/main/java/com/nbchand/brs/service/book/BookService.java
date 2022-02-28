@@ -9,4 +9,5 @@ import com.nbchand.brs.service.GenericCrudService;
  * @since 2022-02-27
  */
 public interface BookService extends GenericCrudService<BookDto> {
+    public BookDto makeBookDtoComplete(BookDto bookDto);
 }

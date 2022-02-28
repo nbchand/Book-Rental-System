@@ -20,4 +20,9 @@ public class DateServiceImpl implements DateService {
     public String getTodayDateString() {
         return new String(FORMAT.format(new Date()));
     }
+
+    @Override
+    public String getDateString(Date date) {
+        return new String(FORMAT.format(date));
+    }
 }

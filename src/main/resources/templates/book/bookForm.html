@@ -17,7 +17,7 @@
         <a th:href="@{~/book}">Back</a>
     </div>
 
-    <div class="form-container">
+    <div class="form-container" th:object="${bookDto}">
 
         <div class="error-message-container database-error" th:if="${errorMessage}">
             <div class="error-message" th:text="${errorMessage}"></div>
@@ -35,16 +35,16 @@
                     <label for="book-category">Category:</label>
                     <select id="book-category" th:field="*{categoryId}">
                         <option selected th:value="${null}">Select a category</option>
-                        <option th:each="category : ${allCategories}" th:text="${category.name}"
-                                th:value="${category.id}"
+                        <option th:each="categoryDto : ${allCategories}" th:text="${categoryDto.name}"
+                                th:value="${categoryDto.id}"
                         ></option>
                     </select>
                 </div>
                 <div>
                     <label for="book-author">Author:</label>
                         <select id="book-author" multiple th:field="*{authorIds}">
-                            <option th:each="author : ${allAuthors}" th:text="${author.name}"
-                                    th:value="${author.id}"
+                            <option th:each="authorDto : ${allAuthors}" th:text="${authorDto.name}"
+                                    th:value="${authorDto.id}"
                             ></option>
                         </select>
                 </div>

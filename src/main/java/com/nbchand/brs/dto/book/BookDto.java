@@ -7,9 +7,7 @@ import com.nbchand.brs.entity.category.Category;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,17 +29,19 @@ public class BookDto {
     @NotEmpty(message = "Book name must not be empty")
     private String name;
 
-    @NotEmpty(message = "Number of book pages must not be empty")
+    @NotNull(message = "Number of book pages must not be empty")
     @Min(value = 1, message = "Book must have at least 1 page")
     private Integer numberOfPages;
 
     @NotEmpty(message = "Book ISBN must not be empty")
     private String isbn;
 
-    @NotEmpty(message = "Book rating must not be empty")
+    @NotNull(message = "Provide a book rating")
+    @Min(value = 0, message = "Book rating can't be negative")
+    @Max(value = 5, message = "Book rating can't be greater than 5")
     private Double rating;
 
-    @NotEmpty(message = "Book stock count must not be empty")
+    @NotNull(message = "Provide book stock count")
     @Min(value = 0, message = "Stock count can't be negative")
     private Integer stockCount;
 
@@ -51,20 +51,25 @@ public class BookDto {
 
     private Date publishedDate;
 
-    @NotEmpty(message = "Book photo can't be empty")
+    @NotNull(message = "Book photo can't be empty")
     private MultipartFile photo;
 
     private String photoLocation;
 
-    @NotEmpty(message = "Book category can't be empty")
+    @NotNull(message = "Book category can't be empty")
     private Integer categoryId;
 
     private CategoryDto categoryDto;
 
+    private Category category;
+
     @NotEmpty(message = "Book authors can't be empty")
+    @NotNull(message = "Book authors can't be empty")
     List<Integer> authorIds;
 
     private List<AuthorDto> authorDtoList;
+
+    private List<Author> authors;
 
     public static class BookDtoBuilder {
         public BookDtoBuilder categoryDto(Category category) {
