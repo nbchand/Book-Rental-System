@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
                         .isbn(book.getIsbn())
                         .publishedDateString(dateService.getDateString(book.getPublishedDate()))
                         .stockCount(book.getStockCount())
-                        .photoLocation(book.getPhoto())
+                        .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
                         .rating(book.getRating())
                         .build()
         ).collect(Collectors.toList());
@@ -139,7 +139,7 @@ public class BookServiceImpl implements BookService {
                     .isbn(book.getIsbn())
                     .publishedDateString(dateService.getDateString(book.getPublishedDate()))
                     .stockCount(book.getStockCount())
-                    .photoLocation(book.getPhoto())
+                    .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
                     .rating(book.getRating())
                     .build();
             return ResponseDto.builder()

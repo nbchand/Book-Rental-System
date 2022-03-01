@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/book/bookDescription.css}" />
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="container" th:object="${bookDto}">
+        <h2 th:text="${bookDto.name}"></h2>
+        <div class="btn-container">
+            <a th:href="@{~/book}">Back</a>
+        </div>
+        <img th:src="${bookDto.photoLocation}" alt="no image found" />
+        <div class="content">
+            <label class="data">Category: <span th:text="${bookDto.categoryDto.name}"></span></label>
+            <hr />
+            <div class="data">
+                <label>Authors: </label>
+                <ul th:each="authorDto : ${bookDto.authorDtoList}">
+                    <li th:text="${authorDto.name}"></li>
+                </ul>
+            </div>
+            <hr />
+            <label class="data">No. of Pages: <span th:text="${bookDto.numberOfPages}"></span> </label>
+            <hr />
+            <label class="data">Rating: <span th:text="${bookDto.rating}"></span> </label>
+            <hr />
+            <label class="data">Stock count: <span th:text="${bookDto.stockCount}"></span> </label>
+            <hr />
+            <label class="data">Published date: <span th:text="${bookDto.publishedDateString}"></span> </label>
+            <hr />
+            <label class="data">ISBN: <span th:text="${bookDto.isbn}"></span> </label>
+        </div>
+    </div>
+</div>
+</body>
+</html>

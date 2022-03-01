@@ -129,4 +129,15 @@ public class BookController {
         redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
         return "redirect:/book";
     }
+
+    @GetMapping("/{id}")
+    public String displayBookDescription(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes){
+        ResponseDto responseDto = bookService.findEntityById(id);
+        if(responseDto.isStatus()){
+            model.addAttribute("bookDto", responseDto.getBookDto());
+            return "book/bookDescription";
+        }
+        redirectAttributes.addFlashAttribute("errorMessage", "Book not found");
+        return "redirect:/book";
+    }
 }

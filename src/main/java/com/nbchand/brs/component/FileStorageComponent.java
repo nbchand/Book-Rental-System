@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -50,6 +52,18 @@ public class FileStorageComponent {
                     .status(false)
                     .message("Only jpg, jpeg and png format are supported")
                     .build();
+        }
+    }
+
+    public String returnFileAsBase64(String filePath) {
+        File file = new File(filePath);
+        try{
+            byte[] bytes = Files.readAllBytes(file.toPath());
+            String base64EncodedImage = "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+            return base64EncodedImage;
+        }catch (IOException exception){
+            log.error(exception.getMessage());
+            return null;
         }
     }
 

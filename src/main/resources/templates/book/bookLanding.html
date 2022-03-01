@@ -30,7 +30,7 @@
             </tr>
             <tr th:each="bookDto, iterator: ${bookDtoList}">
                 <td th:text="${iterator.count}"></td>
-                <td><a href="#" th:text="${bookDto.name}"></a></td>
+                <td><a th:href="@{~/book/}+${bookDto.id}" th:text="${bookDto.name}"></a></td>
                 <td th:text="${bookDto.categoryDto.name}"></td>
                 <td>
                     <a class="edit" th:href="@{~/book/edit/}+${bookDto.id}"
