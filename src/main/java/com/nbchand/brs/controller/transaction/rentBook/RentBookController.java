@@ -95,7 +95,7 @@ public class RentBookController {
                              Model model,
                              RedirectAttributes redirectAttributes) {
         ResponseDto responseDto = bookTransactionService.findEntityById(id);
-        if(!responseDto.isStatus()) {
+        if(!responseDto.isStatus() || responseDto.getBookTransactionDto().getRentType().equals(RentType.RETURN)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Book transaction not found");
             return "redirect:/rent";
         }
