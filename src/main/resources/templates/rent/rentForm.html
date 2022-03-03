@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/formButton.css}"/>
+    <link rel="stylesheet" th:href="@{~/css/rent/rentForm.css}"/>
+    <title>Book Rental System</title>
+</head>
+<body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Rent a book</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/rent}">Back</a>
+    </div>
+
+    <div class="form-container" th:object="${bookTransactionDto}">
+
+        <div class="error-message-container database-error" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <div class="error-message-container dto-validation-error" th:if="${#fields.hasAnyErrors()}" th:each="err : ${#fields.allErrors()}">
+            <div class="error-message" th:text="${err}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <form enctype="multipart/form-data" th:method="${bookTransactionDto.id}==null ? 'post' : 'put'" th:action="${bookTransactionDto.id}==null ? @{~/rent} : @{~/rent/}+${bookTransactionDto.id}" th:object="${bookTransactionDto}">
+            <div class="binder">
+                <div>
+                    <label for="book">Book:</label>
+                    <select id="book" th:field="*{bookId}">
+                        <option selected th:value="${null}">Select a Book</option>
+                        <option th:each="bookDto : ${bookDtoList}" th:text="${bookDto.name}"
+                                th:value="${bookDto.id}"
+                        ></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="member">Member:</label>
+                    <select id="member" th:field="*{memberId}">
+                        <option selected th:value="${null}">Select a Member</option>
+                        <option th:each="memberDto : ${memberDtoList}" th:text="${memberDto.name}"
+                                th:value="${memberDto.id}"
+                        ></option>
+                    </select>
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="code">Code:</label>
+                    <input
+                            id="code"
+                            type="text"
+                            placeholder="Code"
+                            required
+                            th:field="*{code}"
+                            th:value="*{code}"
+                    />
+                </div>
+                <div>
+                    <label for="days">Number of days:</label>
+                    <input
+                            id="days"
+                            type="number"
+                            placeholder="Renting days"
+                            required
+                            th:field="*{noOfDays}"
+                            th:value="*{noOfDays}"
+                    />
+                </div>
+            </div>
+            <div class="formBtn-container">
+                <input type="submit" value="SAVE"/>
+                <input type="reset" value="RESET"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{~/js/common.js}"></script>
+</body>
+</html>

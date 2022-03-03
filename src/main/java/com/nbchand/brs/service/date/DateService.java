@@ -8,7 +8,8 @@ import java.util.Date;
  * @since 2022-02-27
  */
 public interface DateService {
-    public String getTodayDateString();
-
-    public String getDateString(Date date);
+    String getTodayDateString();
+    String getDateString(Date date);
+    Integer findDifferenceInDays(Date date1, Date date2);
+    Date findToDate(Date fromDate, Integer noOfDays);
 }

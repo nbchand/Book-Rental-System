@@ -14,7 +14,9 @@ import java.util.Date;
  * @since 2022-02-24
  */
 @Entity
-@Table(name = "tbl_book_transaction")
+@Table(name = "tbl_book_transaction", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_Book_Transaction_Code" , columnNames = "code")
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,10 +37,6 @@ public class BookTransaction {
     private Date fromDate;
 
     private Date toDate;
-
-    private Boolean rentStatus;
-
-    private Boolean activeClosed;
 
     private RentType rentType;
 
