@@ -2,6 +2,7 @@ package com.nbchand.brs.service.bookTransaction.impl;
 
 import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
 import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.entity.book.Book;
 import com.nbchand.brs.entity.bookTransaction.BookTransaction;
 import com.nbchand.brs.repository.book.BookRepo;
 import com.nbchand.brs.repository.bookTransaction.BookTransactionRepo;
@@ -43,11 +44,16 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                 .rentType(bookTransactionDto.getRentType())
                 .code(bookTransactionDto.getCode())
                 .build();
-        if (bookTransaction.getId() != null) {
-            bookTransaction.setId(bookTransaction.getId());
+        if (bookTransactionDto.getId() != null) {
+            bookTransaction.setId(bookTransactionDto.getId());
         }
         try {
             bookTransactionRepo.save(bookTransaction);
+            if (bookTransactionDto.getId() == null) {
+                Book book = bookTransaction.getBook();
+                book.setStockCount(book.getStockCount() - 1);
+                bookRepo.save(book);
+            }
             return ResponseDto.builder()
                     .status(true)
                     .build();
@@ -83,8 +89,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
             BookTransactionDto bookTransactionDto = BookTransactionDto.builder()
                     .bookDto(bookTransaction.getBook())
                     .memberDto(bookTransaction.getMember())
+                    .bookId(bookTransaction.getBook().getId())
+                    .memberId(bookTransaction.getMember().getId())
                     .id(bookTransaction.getId())
                     .code(bookTransaction.getCode())
+                    .fromDate(bookTransaction.getFromDate())
                     .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
                     .toDateString(dateService.getDateString(bookTransaction.getToDate()))
                     .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
@@ -109,7 +118,14 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     @Override
     public ResponseDto makeBookTransactionDtoComplete(BookTransactionDto bookTransactionDto) {
         try {
-            bookTransactionDto.setBook(bookRepo.getById(bookTransactionDto.getBookId()));
+            Book book = bookRepo.getById(bookTransactionDto.getBookId());
+            if (book.getStockCount() <= 0) {
+                return ResponseDto.builder()
+                        .status(false)
+                        .message("Book not in stock")
+                        .build();
+            }
+            bookTransactionDto.setBook(book);
             bookTransactionDto.setMember(memberRepo.getById(bookTransactionDto.getMemberId()));
             bookTransactionDto.setToDate(dateService.findToDate(bookTransactionDto.getFromDate(), bookTransactionDto.getNoOfDays()));
             return ResponseDto.builder()

@@ -184,4 +184,24 @@ public class BookServiceImpl implements BookService {
         }
         return bookDto;
     }
+
+    @Override
+    public List<BookDto> findAllBooksInStock() {
+        List<Book> books = bookRepo.findAllByStockCountIsGreaterThan(0);
+        List<BookDto> bookDtoList = books.stream().map(book ->
+                BookDto.builder()
+                        .id(book.getId())
+                        .name(book.getName())
+                        .numberOfPages(book.getNumberOfPages())
+                        .categoryDto(book.getCategory())
+                        .authorDtoList(book.getAuthors())
+                        .isbn(book.getIsbn())
+                        .publishedDateString(dateService.getDateString(book.getPublishedDate()))
+                        .stockCount(book.getStockCount())
+                        .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
+                        .rating(book.getRating())
+                        .build()
+        ).collect(Collectors.toList());
+        return bookDtoList;
+    }
 }
