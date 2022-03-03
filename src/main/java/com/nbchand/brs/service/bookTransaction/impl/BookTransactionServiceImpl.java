@@ -112,7 +112,18 @@ public class BookTransactionServiceImpl implements BookTransactionService {
 
     @Override
     public ResponseDto deleteEntityById(Integer id) {
-        return null;
+        try {
+            bookTransactionRepo.deleteById(id);
+            return ResponseDto.builder()
+                    .status(true)
+                    .message("Book transaction deleted successfully")
+                    .build();
+        } catch (Exception exception) {
+            return ResponseDto.builder()
+                    .status(false)
+                    .message("Book transaction not found")
+                    .build();
+        }
     }
 
     @Override

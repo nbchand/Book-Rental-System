@@ -121,4 +121,11 @@ public class RentBookController {
         redirectAttributes.addFlashAttribute("errorMessage", completeResponse.getMessage());
         return "redirect:/rent";
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteTransaction(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        ResponseDto responseDto = bookTransactionService.deleteEntityById(id);
+        redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
+        return "redirect:/rent";
+    }
 }
