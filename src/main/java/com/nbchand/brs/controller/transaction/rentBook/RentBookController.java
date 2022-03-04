@@ -36,7 +36,7 @@ public class RentBookController {
 
     @GetMapping
     public String displayRentLanding(Model model) {
-        model.addAttribute("bookTransactionDtoList", bookTransactionService.findAllEntities());
+        model.addAttribute("bookTransactionDtoList", bookTransactionService.findTransactionsByRentType(RentType.RENT));
         return "rent/rentLanding";
     }
 

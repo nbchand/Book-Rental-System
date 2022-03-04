@@ -156,4 +156,22 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                     .build();
         }
     }
+
+    @Override
+    public List<BookTransactionDto> findTransactionsByRentType(RentType rentType) {
+        List<BookTransaction> bookTransactions = bookTransactionRepo.findAllByRentType(rentType);
+        List<BookTransactionDto> bookTransactionDtoList = bookTransactions.stream().map(bookTransaction ->
+                        BookTransactionDto.builder()
+                                .rentType(bookTransaction.getRentType())
+                                .bookDto(bookTransaction.getBook())
+                                .memberDto(bookTransaction.getMember())
+                                .id(bookTransaction.getId())
+                                .code(bookTransaction.getCode())
+                                .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
+                                .toDateString(dateService.getDateString(bookTransaction.getToDate()))
+                                .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
+                                .build())
+                .collect(Collectors.toList());
+        return bookTransactionDtoList;
+    }
 }
