@@ -38,6 +38,7 @@ public class BookTransaction {
 
     private Date toDate;
 
+    @Enumerated(value = EnumType.STRING)
     private RentType rentType;
 
     @ManyToOne

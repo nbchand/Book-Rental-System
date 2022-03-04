@@ -4,6 +4,7 @@ import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
 import com.nbchand.brs.dto.response.ResponseDto;
 import com.nbchand.brs.entity.book.Book;
 import com.nbchand.brs.entity.bookTransaction.BookTransaction;
+import com.nbchand.brs.enums.RentType;
 import com.nbchand.brs.repository.book.BookRepo;
 import com.nbchand.brs.repository.bookTransaction.BookTransactionRepo;
 import com.nbchand.brs.repository.member.MemberRepo;
@@ -49,9 +50,12 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         }
         try {
             bookTransactionRepo.save(bookTransaction);
-            if (bookTransactionDto.getId() == null) {
-                Book book = bookTransaction.getBook();
+            Book book = bookTransaction.getBook();
+            if (bookTransactionDto.getId() == null && bookTransactionDto.getRentType().equals(RentType.RENT)) {
                 book.setStockCount(book.getStockCount() - 1);
+                bookRepo.save(book);
+            } else if (bookTransactionDto.getId() == null && bookTransactionDto.getRentType().equals(RentType.RETURN)) {
+                book.setStockCount(book.getStockCount() + 1);
                 bookRepo.save(book);
             }
             return ResponseDto.builder()
@@ -70,6 +74,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         List<BookTransaction> bookTransactions = bookTransactionRepo.findAll();
         List<BookTransactionDto> bookTransactionDtoList = bookTransactions.stream().map(bookTransaction ->
                         BookTransactionDto.builder()
+                                .rentType(bookTransaction.getRentType())
                                 .bookDto(bookTransaction.getBook())
                                 .memberDto(bookTransaction.getMember())
                                 .id(bookTransaction.getId())
@@ -87,6 +92,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         try {
             BookTransaction bookTransaction = bookTransactionRepo.getById(id);
             BookTransactionDto bookTransactionDto = BookTransactionDto.builder()
+                    .rentType(bookTransaction.getRentType())
                     .bookDto(bookTransaction.getBook())
                     .memberDto(bookTransaction.getMember())
                     .bookId(bookTransaction.getBook().getId())
