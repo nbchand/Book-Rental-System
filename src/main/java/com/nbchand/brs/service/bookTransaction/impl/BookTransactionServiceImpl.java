@@ -53,36 +53,28 @@ public class BookTransactionServiceImpl implements BookTransactionService {
             //for saving
             if (bookTransactionDto.getId() == null) {
                 //for rent transaction
-                if (bookTransactionDto.getRentType().equals(RentType.RENT)) {
                     currentBook.setStockCount(currentBook.getStockCount() - 1);
-                }
-                //for return transaction
-                else if (bookTransactionDto.getRentType().equals(RentType.RETURN)) {
-                    currentBook.setStockCount(currentBook.getStockCount() + 1);
-                }
             }
             //for editing
             else {
-                Book prevBook = bookTransactionRepo.getById(bookTransactionDto.getId()).getBook();
                 //for rent transaction
-                if (bookTransactionDto.getRentType().equals(RentType.RENT)) {
+                if (bookTransactionDto.getRentType().name().equals(RentType.RENT.name())) {
+                    Book prevBook = bookTransactionRepo.getById(bookTransactionDto.getId()).getBook();
                     currentBook.setStockCount(currentBook.getStockCount() - 1);
                     prevBook.setStockCount(prevBook.getStockCount() + 1);
+                    bookRepo.save(prevBook);
                 }
                 //for return transaction
-                else if (bookTransactionDto.getRentType().equals(RentType.RETURN)) {
+                else if (bookTransactionDto.getRentType().name().equals(RentType.RETURN.name())) {
                     currentBook.setStockCount(currentBook.getStockCount() + 1);
-                    prevBook.setStockCount(prevBook.getStockCount() - 1);
                 }
-                bookRepo.save(prevBook);
             }
             bookRepo.save(currentBook);
             bookTransactionRepo.save(bookTransaction);
             return ResponseDto.builder()
                     .status(true)
                     .build();
-        } catch (
-                Exception exception) {
+        } catch (Exception exception) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Transaction code is already taken")
@@ -117,12 +109,15 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                     .rentType(bookTransaction.getRentType())
                     .bookDto(bookTransaction.getBook())
                     .memberDto(bookTransaction.getMember())
+                    .member(bookTransaction.getMember())
+                    .book(bookTransaction.getBook())
                     .bookId(bookTransaction.getBook().getId())
                     .memberId(bookTransaction.getMember().getId())
                     .id(bookTransaction.getId())
                     .code(bookTransaction.getCode())
                     .fromDate(bookTransaction.getFromDate())
                     .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
+                    .toDate(bookTransaction.getToDate())
                     .toDateString(dateService.getDateString(bookTransaction.getToDate()))
                     .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
                     .build();
@@ -158,7 +153,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     public ResponseDto makeBookTransactionDtoComplete(BookTransactionDto bookTransactionDto) {
         try {
             Book book = bookRepo.getById(bookTransactionDto.getBookId());
-            if (book.getStockCount() <= 0) {
+            if (book.getStockCount() <= 0 && bookTransactionDto.getRentType().name().equals(RentType.RENT.name())) {
                 return ResponseDto.builder()
                         .status(false)
                         .message("Book not in stock")
@@ -195,5 +190,42 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                                 .build())
                 .collect(Collectors.toList());
         return bookTransactionDtoList;
+    }
+
+    @Override
+    public List<String> getAllTransactionCode() {
+        return bookTransactionRepo.findAllTransactionCode();
+    }
+
+    @Override
+    public ResponseDto findTransactionByCode(String code) {
+        try {
+            BookTransaction bookTransaction = bookTransactionRepo.findBookTransactionByCode(code);
+            BookTransactionDto bookTransactionDto = BookTransactionDto.builder()
+                    .rentType(bookTransaction.getRentType())
+                    .bookDto(bookTransaction.getBook())
+                    .book(bookTransaction.getBook())
+                    .member(bookTransaction.getMember())
+                    .memberDto(bookTransaction.getMember())
+                    .bookId(bookTransaction.getBook().getId())
+                    .memberId(bookTransaction.getMember().getId())
+                    .id(bookTransaction.getId())
+                    .code(bookTransaction.getCode())
+                    .fromDate(bookTransaction.getFromDate())
+                    .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
+                    .toDate(bookTransaction.getToDate())
+                    .toDateString(dateService.getDateString(bookTransaction.getToDate()))
+                    .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
+                    .build();
+            return ResponseDto.builder()
+                    .status(true)
+                    .bookTransactionDto(bookTransactionDto)
+                    .build();
+        } catch (Exception exception) {
+            return ResponseDto.builder()
+                    .status(false)
+                    .message("Book transaction not found")
+                    .build();
+        }
     }
 }

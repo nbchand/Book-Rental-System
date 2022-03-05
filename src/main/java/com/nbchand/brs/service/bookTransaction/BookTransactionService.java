@@ -15,4 +15,6 @@ import java.util.List;
 public interface BookTransactionService extends GenericCrudService<BookTransactionDto> {
     ResponseDto makeBookTransactionDtoComplete(BookTransactionDto bookTransactionDto);
     List<BookTransactionDto> findTransactionsByRentType(RentType rentType);
+    List<String> getAllTransactionCode();
+    ResponseDto findTransactionByCode(String code);
 }

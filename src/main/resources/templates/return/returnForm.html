@@ -1,10 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:replace="fragments/navbar::navRequirement"></div>
+    <link rel="stylesheet" th:href="@{~/css/formButton.css}"/>
+    <link rel="stylesheet" th:href="@{~/css/rent/rentForm.css}"/>
+    <title>Book Rental System</title>
 </head>
 <body>
+<div th:replace="fragments/navbar::navbar"></div>
+<div class="wrapper">
+    <div class="title-container">
+        <label class="title">Return a book</label>
+    </div>
+    <div class="btn-container">
+        <a th:href="@{~/return}">Back</a>
+    </div>
 
+    <div class="form-container">
+
+        <div class="error-message-container database-error" th:if="${errorMessage}">
+            <div class="error-message" th:text="${errorMessage}"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <div id="js-message-container" class="error-message-container">
+            <div id="js-error" class="error-message"></div>
+            <a class="cross" href="#"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        <form th:method="post" th:action="@{~/return}">
+            <div class="binder">
+                <div>
+                    <label for="code-list">Code:</label>
+                    <select th:name="code" id="code-list" style="width: 30%;">
+                        <option selected th:value="${null}">Select a code</option>
+                        <option th:each="code : ${codeList}" th:text="${code}"
+                                th:value="${code}"
+                        ></option>
+                    </select>
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="rent-date">Date of Request:</label>
+                    <input
+                            id="rent-date"
+                            type="text"
+                            required
+                            disabled
+                    />
+                </div>
+                <div>
+                    <label for="return-date">Date of return:</label>
+                    <input
+                            id="return-date"
+                            type="text"
+                            required
+                            disabled
+                    />
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="member">Member:</label>
+                    <input
+                            id="member"
+                            type="text"
+                            required
+                            disabled
+                    />
+                </div>
+                <div>
+                    <label for="book">Book:</label>
+                    <input
+                            id="book"
+                            type="text"
+                            required
+                            disabled
+                    />
+                </div>
+            </div>
+            <div class="binder binder-bottom">
+                <div>
+                    <label for="status">Status:</label>
+                    <input
+                            style="width: 30%;"
+                            id="status"
+                            type="text"
+                            required
+                            disabled
+                    />
+                </div>
+            </div>
+            <div class="formBtn-container">
+                <input type="submit" value="SAVE"/>
+                <input type="reset" value="RESET"/>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{~/js/common.js}"></script>
+<script th:src="@{~/js/return/returnForm.js}"></script>
 </body>
 </html>
