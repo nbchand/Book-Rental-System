@@ -2,7 +2,6 @@ package com.nbchand.brs.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author Narendra

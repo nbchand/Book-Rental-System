@@ -49,24 +49,46 @@ public class BookTransactionServiceImpl implements BookTransactionService {
             bookTransaction.setId(bookTransactionDto.getId());
         }
         try {
-            bookTransactionRepo.save(bookTransaction);
-            Book book = bookTransaction.getBook();
-            if (bookTransactionDto.getId() == null && bookTransactionDto.getRentType().equals(RentType.RENT)) {
-                book.setStockCount(book.getStockCount() - 1);
-                bookRepo.save(book);
-            } else if (bookTransactionDto.getId() == null && bookTransactionDto.getRentType().equals(RentType.RETURN)) {
-                book.setStockCount(book.getStockCount() + 1);
-                bookRepo.save(book);
+            Book currentBook = bookTransactionDto.getBook();
+            //for saving
+            if (bookTransactionDto.getId() == null) {
+                //for rent transaction
+                if (bookTransactionDto.getRentType().equals(RentType.RENT)) {
+                    currentBook.setStockCount(currentBook.getStockCount() - 1);
+                }
+                //for return transaction
+                else if (bookTransactionDto.getRentType().equals(RentType.RETURN)) {
+                    currentBook.setStockCount(currentBook.getStockCount() + 1);
+                }
             }
+            //for editing
+            else {
+                Book prevBook = bookTransactionRepo.getById(bookTransactionDto.getId()).getBook();
+                //for rent transaction
+                if (bookTransactionDto.getRentType().equals(RentType.RENT)) {
+                    currentBook.setStockCount(currentBook.getStockCount() - 1);
+                    prevBook.setStockCount(prevBook.getStockCount() + 1);
+                }
+                //for return transaction
+                else if (bookTransactionDto.getRentType().equals(RentType.RETURN)) {
+                    currentBook.setStockCount(currentBook.getStockCount() + 1);
+                    prevBook.setStockCount(prevBook.getStockCount() - 1);
+                }
+                bookRepo.save(prevBook);
+            }
+            bookRepo.save(currentBook);
+            bookTransactionRepo.save(bookTransaction);
             return ResponseDto.builder()
                     .status(true)
                     .build();
-        } catch (Exception exception) {
+        } catch (
+                Exception exception) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Transaction code is already taken")
                     .build();
         }
+
     }
 
     @Override
