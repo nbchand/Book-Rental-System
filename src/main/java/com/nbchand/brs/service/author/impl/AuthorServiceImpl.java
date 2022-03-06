@@ -5,6 +5,7 @@ import com.nbchand.brs.dto.response.ResponseDto;
 import com.nbchand.brs.entity.author.Author;
 import com.nbchand.brs.repository.author.AuthorRepo;
 import com.nbchand.brs.service.author.AuthorService;
+import com.nbchand.brs.service.mailService.MailService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     private AuthorRepo authorRepo;
 
-    public AuthorServiceImpl(AuthorRepo authorRepo) {
+    private MailService mailService;
+
+    public AuthorServiceImpl(AuthorRepo authorRepo, MailService mailService) {
         this.authorRepo = authorRepo;
+        this.mailService = mailService;
     }
 
     @Override
@@ -36,7 +40,16 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         try {
+            Boolean areEmailSame = this.compareEmail(authorDto);
             authorRepo.save(author);
+            if(authorDto.getId() == null) {
+                mailService.sendAuthorRegistrationMail(authorDto);
+            }
+            else {
+                if(!areEmailSame) {
+                    mailService.sendAuthorRegistrationMail(authorDto);
+                }
+            }
             return ResponseDto.builder()
                     .status(true)
                     .build();
@@ -107,5 +120,14 @@ public class AuthorServiceImpl implements AuthorService {
                     .message("Author not found")
                     .build();
         }
+    }
+
+    public Boolean compareEmail(AuthorDto authorDto) {
+        if(authorDto.getId()==null){
+            return false;
+        }
+        String currentEmail = authorDto.getEmail();
+        String prevEmail = authorRepo.getById(authorDto.getId()).getEmail();
+        return currentEmail.equals(prevEmail);
     }
 }
