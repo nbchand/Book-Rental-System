@@ -50,12 +50,21 @@ public class BookServiceImpl implements BookService {
         this.dateService = dateService;
     }
 
+    /**
+     * Saves book to the database
+     * @param bookDto
+     * @return
+     */
     @Override
     public ResponseDto saveEntity(BookDto bookDto) {
+        //saves uploaded book photo in the server and catches response
         ResponseDto fileSavingResponse = fileStorageComponent.storeFile(bookDto.getPhoto());
+        //executes if photo was saved
         if (fileSavingResponse.isStatus()) {
+            //variables declared null only to make their scope bigger
             Book ourBook = null;
             File oldPhoto = null;
+            //maps bookDto into book
             Book book = Book.builder()
                     .name(bookDto.getName())
                     .isbn(bookDto.getIsbn())
@@ -67,28 +76,37 @@ public class BookServiceImpl implements BookService {
                     .photo(fileSavingResponse.getMessage())
                     .rating(bookDto.getRating())
                     .build();
+            //if book is meant to be edited, set id to it and extract its older photo as file for deletion
             if (bookDto.getId() != null) {
                 ourBook = bookRepo.getById(bookDto.getId());
                 oldPhoto = new File(ourBook.getPhoto());
                 book.setId(bookDto.getId());
             }
+            //exception handling for unique columns book isbn and book name
             try {
+                //saves book
                 bookRepo.save(book);
+                //if book was edited delete it older photo from memory
                 if (bookDto.getId() != null) {
                     log.info("Older photo deletion: " + oldPhoto.delete());
                 }
+                //send response
                 return ResponseDto.builder()
                         .status(true)
                         .build();
             } catch (Exception exception) {
+                //if book was not saved delete the uploaded photo which was stored
                 File uploadedFile = new File(fileSavingResponse.getMessage());
                 log.info("Uploaded file deleted: " + uploadedFile.delete());
+                //executes if duplicate book isbn was entered
                 if (exception.getMessage().contains("isbn")) {
                     return ResponseDto.builder()
                             .status(false)
                             .message("Book ISBN already in use")
                             .build();
-                } else {
+                }
+                //executes if duplicate book name was entered
+                else {
 
                     return ResponseDto.builder()
                             .status(false)
@@ -97,12 +115,17 @@ public class BookServiceImpl implements BookService {
                 }
             }
         }
+        //if photo was not saved send response as false with message
         return ResponseDto.builder()
                 .status(false)
                 .message(fileSavingResponse.getMessage())
                 .build();
     }
 
+    /**
+     * Get all the books in the database
+     * @return
+     */
     @Override
     public List<BookDto> findAllEntities() {
         List<Book> books = bookRepo.findAll();
@@ -123,6 +146,11 @@ public class BookServiceImpl implements BookService {
         return bookDtoList;
     }
 
+    /**
+     * Get a single book by id
+     * @param id book id
+     * @return ResponseDto with status and message/BookDto
+     */
     @Override
     public ResponseDto findEntityById(Integer id) {
         try {
@@ -154,18 +182,27 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    /**
+     * Delete book from the database and its photo from memory
+     * @param id book id
+     * @return ResponseDto
+     */
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try {
             Book book = bookRepo.getById(id);
             File photo = new File(book.getPhoto());
+            //first delete book photo
             log.info("Book Deletion: " + photo.delete());
+            //at last delete book from database
             bookRepo.deleteById(id);
             return ResponseDto.builder()
                     .status(true)
                     .message("Book deleted successfully")
                     .build();
-        } catch (Exception exception) {
+        }
+        //if book id was invalid
+        catch (Exception exception) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Book not found")
@@ -173,18 +210,30 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    /**
+     * Makes BookDto taken from html complete, so that it can be mapped to Book
+     * @param bookDto incomplete BookDto
+     * @return a complete BookDto
+     */
     @Override
     public BookDto makeBookDtoComplete(BookDto bookDto) {
+        //set category, authors and published date
         bookDto.setCategory(categoryRepo.getById(bookDto.getCategoryId()));
         bookDto.setAuthors(authorRepo.findAllById(bookDto.getAuthorIds()));
         try {
             bookDto.setPublishedDate(new SimpleDateFormat("yyyy-MM-dd").parse(bookDto.getPublishedDateString()));
-        } catch (ParseException exception) {
+        }
+        //if date published date can't be parsed set today's date as published date
+        catch (ParseException exception) {
             bookDto.setPublishedDate(new Date());
         }
         return bookDto;
     }
 
+    /**
+     * Returns the list of books which have stockCount more than 0
+     * @return BookDto list
+     */
     @Override
     public List<BookDto> findAllBooksInStock() {
         List<Book> books = bookRepo.findAllByStockCountIsGreaterThan(0);
