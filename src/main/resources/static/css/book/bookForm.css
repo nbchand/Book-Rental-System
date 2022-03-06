@@ -26,3 +26,6 @@ form input[type="number"] {
 form input[type="file"] {
     color: #072448;
 }
+select option {
+    font-size: 1.5em;
+}

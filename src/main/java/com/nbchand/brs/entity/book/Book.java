@@ -1,10 +1,13 @@
 package com.nbchand.brs.entity.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nbchand.brs.entity.author.Author;
+import com.nbchand.brs.entity.bookTransaction.BookTransaction;
 import com.nbchand.brs.entity.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,4 +62,8 @@ public class Book {
                 foreignKey = @ForeignKey(name = "FK_Book"),
                 inverseForeignKey = @ForeignKey(name = "FK_Author"))
     private List<Author> authors;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<BookTransaction> bookTransactions;
 }

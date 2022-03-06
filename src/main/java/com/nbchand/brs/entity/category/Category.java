@@ -1,8 +1,12 @@
 package com.nbchand.brs.entity.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nbchand.brs.entity.book.Book;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Narendra
@@ -29,4 +33,8 @@ public class Category {
     private String name;
 
     private String description;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Book> books;
 }

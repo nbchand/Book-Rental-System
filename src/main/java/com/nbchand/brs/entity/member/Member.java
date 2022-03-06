@@ -1,8 +1,13 @@
 package com.nbchand.brs.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nbchand.brs.entity.bookTransaction.BookTransaction;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Narendra
  * @version 1.0
@@ -35,4 +40,8 @@ public class Member {
     private String mobileNumber;
 
     private String address;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<BookTransaction> bookTransactions;
 }

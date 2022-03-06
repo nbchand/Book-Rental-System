@@ -1,8 +1,12 @@
 package com.nbchand.brs.entity.author;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nbchand.brs.entity.book.Book;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Narendra
@@ -31,4 +35,8 @@ public class Author {
     private String email;
 
     private String mobileNumber;
+
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Book> books;
 }
