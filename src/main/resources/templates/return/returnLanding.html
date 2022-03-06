@@ -35,9 +35,6 @@
                 <td th:text="${bookTransactionDto.memberDto.name}"></td>
                 <td th:text="${bookTransactionDto.code}"></td>
                 <td>
-                    <a class="edit" th:href="@{~/return/edit/}+${bookTransactionDto.id}"
-                    ><i class="fa fa-pencil edit" aria-hidden="true"></i
-                    ></a>
                     <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/return/}+${bookTransactionDto.id}">
                         <a href="#" class="del" onclick="$(this).parent().submit();"><i class="fa fa-trash delete" aria-hidden="true"></i></a>
                     </form>

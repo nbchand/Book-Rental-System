@@ -69,4 +69,11 @@ public class ReturnBookController {
         redirectAttributes.addFlashAttribute("errorMessage", "Invalid transaction code");
         return "redirect:/return/create";
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteReturnTransaction(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        ResponseDto responseDto = bookTransactionService.deleteEntityById(id);
+        redirectAttributes.addFlashAttribute("errorMessage", responseDto.getMessage());
+        return "redirect:/return";
+    }
 }
