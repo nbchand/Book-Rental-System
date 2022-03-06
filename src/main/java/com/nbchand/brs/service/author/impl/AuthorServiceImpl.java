@@ -28,6 +28,11 @@ public class AuthorServiceImpl implements AuthorService {
         this.mailService = mailService;
     }
 
+    /**
+     * Takes AuthorDto, maps it into author and saves the author into database
+     * @param authorDto
+     * @return
+     */
     @Override
     public ResponseDto saveEntity(AuthorDto authorDto) {
         Author author = Author.builder()
@@ -35,31 +40,41 @@ public class AuthorServiceImpl implements AuthorService {
                 .mobileNumber(authorDto.getMobileNumber())
                 .name(authorDto.getName())
                 .build();
+        //if the author was meant to be edited set its id
         if (authorDto.getId() != null) {
             author.setId(authorDto.getId());
         }
-
+        //exception handling because jpa can throw exception when unique keys are duplicated
         try {
+            //checks if author's email was changed or not
             Boolean areEmailSame = this.compareEmail(authorDto);
+            //saves author
             authorRepo.save(author);
+            //if author were created send mail to their email
             if(authorDto.getId() == null) {
                 mailService.sendAuthorRegistrationMail(authorDto);
             }
+            //if author were edited check whether their mail were changed or not
+            //if changed send mail to their new mail
             else {
                 if(!areEmailSame) {
                     mailService.sendAuthorRegistrationMail(authorDto);
                 }
             }
+            //return response with status as true
             return ResponseDto.builder()
                     .status(true)
                     .build();
         } catch (Exception exception) {
+            //if duplicate mobile number is entered
             if (exception.getMessage().contains("mobile")) {
                 return ResponseDto.builder()
                         .status(false)
                         .message("Mobile number already in use")
                         .build();
-            } else {
+            }
+            //if duplicate email address is entered
+            else {
                 return ResponseDto.builder()
                         .status(false)
                         .message("Email address already in use")
@@ -68,6 +83,10 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    /**
+     * Finds all the authors
+     * @return
+     */
     @Override
     public List<AuthorDto> findAllEntities() {
         List<Author> authors = authorRepo.findAll();
@@ -83,6 +102,11 @@ public class AuthorServiceImpl implements AuthorService {
         return authorDtoList;
     }
 
+    /**
+     * Finds author by id
+     * @param id author id
+     * @return AuthorDto
+     */
     @Override
     public ResponseDto findEntityById(Integer id) {
         try {
@@ -106,6 +130,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     }
 
+    /**
+     * Deletes author
+     * @param id author id
+     * @return response with status and message
+     */
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try {
@@ -122,11 +151,19 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    /**
+     * Checks if author's mail was changed or not
+     * @param authorDto Author detail
+     * @return Returns true if email was not changed otherwise false
+     */
     public Boolean compareEmail(AuthorDto authorDto) {
+        //if author is being created for the first time it will just return true
         if(authorDto.getId()==null){
-            return false;
+            return true;
         }
+        //gets current email
         String currentEmail = authorDto.getEmail();
+        //gets previous email from the database
         String prevEmail = authorRepo.getById(authorDto.getId()).getEmail();
         return currentEmail.equals(prevEmail);
     }
