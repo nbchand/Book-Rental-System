@@ -35,6 +35,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         this.dateService = dateService;
     }
 
+    /**
+     * Saves BookTransaction to the database
+     * @param bookTransactionDto
+     * @return
+     */
     @Override
     public ResponseDto saveEntity(BookTransactionDto bookTransactionDto) {
         BookTransaction bookTransaction = BookTransaction.builder()
@@ -45,20 +50,26 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                 .rentType(bookTransactionDto.getRentType())
                 .code(bookTransactionDto.getCode())
                 .build();
+        //if BookTransaction is meant to be edited assign id to it
         if (bookTransactionDto.getId() != null) {
             bookTransaction.setId(bookTransactionDto.getId());
         }
+        //exception handling for unique key violation
         try {
             Book currentBook = bookTransactionDto.getBook();
             //for saving
+            //book id is only null when book is being rented for the first time
             if (bookTransactionDto.getId() == null) {
                 //for rent transaction
-                    currentBook.setStockCount(currentBook.getStockCount() - 1);
+                //if book is rented stock count is decreased by 1
+                currentBook.setStockCount(currentBook.getStockCount() - 1);
             }
             //for editing
             else {
                 //for rent transaction
                 if (bookTransactionDto.getRentType().name().equals(RentType.RENT.name())) {
+                    //if book was rented was edited, get the previous and current book and update their stock count
+                    //if book was not changed stock count will remain constant
                     Book prevBook = bookTransactionRepo.getById(bookTransactionDto.getId()).getBook();
                     currentBook.setStockCount(currentBook.getStockCount() - 1);
                     prevBook.setStockCount(prevBook.getStockCount() + 1);
@@ -66,6 +77,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                 }
                 //for return transaction
                 else if (bookTransactionDto.getRentType().name().equals(RentType.RETURN.name())) {
+                    //if book is returned increase its stock count by 1
                     currentBook.setStockCount(currentBook.getStockCount() + 1);
                 }
             }
@@ -83,6 +95,10 @@ public class BookTransactionServiceImpl implements BookTransactionService {
 
     }
 
+    /**
+     * Returns all the present BookTransactions
+     * @return
+     */
     @Override
     public List<BookTransactionDto> findAllEntities() {
         List<BookTransaction> bookTransactions = bookTransactionRepo.findAll();
@@ -101,6 +117,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         return bookTransactionDtoList;
     }
 
+    /**
+     * Returns BookTransaction by id
+     * @param id
+     * @return
+     */
     @Override
     public ResponseDto findEntityById(Integer id) {
         try {
@@ -133,6 +154,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         }
     }
 
+    /**
+     * Deletes BookTransaction by id
+     * @param id
+     * @return
+     */
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try {
@@ -149,6 +175,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         }
     }
 
+    /**
+     * Makes BookTransactionDto taken from html complete, so that it can be mapped to BookTransaction
+     * @param bookTransactionDto
+     * @return
+     */
     @Override
     public ResponseDto makeBookTransactionDtoComplete(BookTransactionDto bookTransactionDto) {
         try {
@@ -174,6 +205,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         }
     }
 
+    /**
+     * Find all the transactions by rent type
+     * @param rentType
+     * @return
+     */
     @Override
     public List<BookTransactionDto> findTransactionsByRentType(RentType rentType) {
         List<BookTransaction> bookTransactions = bookTransactionRepo.findAllByRentType(rentType);
@@ -192,11 +228,20 @@ public class BookTransactionServiceImpl implements BookTransactionService {
         return bookTransactionDtoList;
     }
 
+    /**
+     * Returns all the transaction code
+     * @return
+     */
     @Override
     public List<String> getAllTransactionCode() {
         return bookTransactionRepo.findAllTransactionCode();
     }
 
+    /**
+     * Finds the transaction by its code
+     * @param code
+     * @return
+     */
     @Override
     public ResponseDto findTransactionByCode(String code) {
         try {
