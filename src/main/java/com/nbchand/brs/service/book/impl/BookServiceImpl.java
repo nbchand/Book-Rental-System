@@ -9,10 +9,10 @@ import com.nbchand.brs.repository.book.BookRepo;
 import com.nbchand.brs.repository.category.CategoryRepo;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.date.DateService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,29 +26,18 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    private FileStorageComponent fileStorageComponent;
+    private final FileStorageComponent fileStorageComponent;
 
-    private CategoryRepo categoryRepo;
+    private final CategoryRepo categoryRepo;
 
-    private AuthorRepo authorRepo;
+    private final AuthorRepo authorRepo;
 
-    public DateService dateService;
-
-    public BookServiceImpl(BookRepo bookRepo,
-                           FileStorageComponent fileStorageComponent,
-                           CategoryRepo categoryRepo,
-                           AuthorRepo authorRepo,
-                           DateService dateService) {
-        this.bookRepo = bookRepo;
-        this.fileStorageComponent = fileStorageComponent;
-        this.categoryRepo = categoryRepo;
-        this.authorRepo = authorRepo;
-        this.dateService = dateService;
-    }
+    public final DateService dateService;
 
     /**
      * Saves book to the database
@@ -57,69 +46,91 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public ResponseDto saveEntity(BookDto bookDto) {
-        //saves uploaded book photo in the server and catches response
-        ResponseDto fileSavingResponse = fileStorageComponent.storeFile(bookDto.getPhoto());
-        //executes if photo was saved
-        if (fileSavingResponse.isStatus()) {
-            //variables declared null only to make their scope bigger
-            Book ourBook = null;
-            File oldPhoto = null;
-            //maps bookDto into book
-            Book book = Book.builder()
-                    .name(bookDto.getName())
-                    .isbn(bookDto.getIsbn())
-                    .numberOfPages(bookDto.getNumberOfPages())
-                    .authors(bookDto.getAuthors())
-                    .category(bookDto.getCategory())
-                    .publishedDate(bookDto.getPublishedDate())
-                    .stockCount(bookDto.getStockCount())
-                    .photo(fileSavingResponse.getMessage())
-                    .rating(bookDto.getRating())
-                    .build();
-            //if book is meant to be edited, set id to it and extract its older photo as file for deletion
-            if (bookDto.getId() != null) {
-                ourBook = bookRepo.getById(bookDto.getId());
-                oldPhoto = new File(ourBook.getPhoto());
-                book.setId(bookDto.getId());
-            }
-            //exception handling for unique columns book isbn and book name
+        //check if user is editing valid book or not
+        if (bookDto.getId() != null ) {
             try {
-                //saves book
-                bookRepo.save(book);
-                //if book was edited delete it older photo from memory
-                if (bookDto.getId() != null) {
-                    log.info("Older photo deletion: " + oldPhoto.delete());
-                }
-                //send response
+                Book demoBook = bookRepo.findById(bookDto.getId()).orElseThrow(RuntimeException::new);
+            }
+            catch (RuntimeException runtimeException) {
                 return ResponseDto.builder()
-                        .status(true)
+                        .status(false)
+                        .message("Book not found")
                         .build();
-            } catch (Exception exception) {
-                //if book was not saved delete the uploaded photo which was stored
-                File uploadedFile = new File(fileSavingResponse.getMessage());
-                log.info("Uploaded file deleted: " + uploadedFile.delete());
-                //executes if duplicate book isbn was entered
-                if (exception.getMessage().contains("isbn")) {
-                    return ResponseDto.builder()
-                            .status(false)
-                            .message("Book ISBN already in use")
-                            .build();
-                }
-                //executes if duplicate book name was entered
-                else {
-
-                    return ResponseDto.builder()
-                            .status(false)
-                            .message("Book name already in use")
-                            .build();
-                }
             }
         }
-        //if photo was not saved send response as false with message
-        return ResponseDto.builder()
-                .status(false)
-                .message(fileSavingResponse.getMessage())
+        //build book from bookDto
+        Book book = Book.builder()
+                .id(bookDto.getId())
+                .name(bookDto.getName())
+                .isbn(bookDto.getIsbn())
+                .numberOfPages(bookDto.getNumberOfPages())
+                .authors(bookDto.getAuthors())
+                .category(bookDto.getCategory())
+                .publishedDate(bookDto.getPublishedDate())
+                .stockCount(bookDto.getStockCount())
+                .rating(bookDto.getRating())
                 .build();
+
+        ResponseDto responseDto = fileStorageComponent.storeFile(bookDto);
+        //if file was not stored return status as false and send error message
+        if(responseDto != null && !responseDto.isStatus()) {
+            return ResponseDto.builder()
+                    .status(false)
+                    .message(responseDto.getMessage())
+                    .build();
+        }
+        //executes if
+        //1) user uploaded image and that image was stored
+        //2) user created book for the first time and didn't upload any image so dummy image was returned
+        if(responseDto != null) {
+            book.setPhoto(responseDto.getMessage());
+        }
+
+        //if book was edited and user didn't upload any image
+        if(responseDto == null) {
+            book.setPhoto(bookRepo.getById(book.getId()).getPhoto());
+        }
+        try{
+            Boolean isPhotoChanged = false;
+            String prevPhoto = null;
+            //extract previous book photo and find out whether it was changed or not when book was edited
+            if(book.getId() != null) {
+                Book prevBook = bookRepo.getById(book.getId());
+                isPhotoChanged = fileStorageComponent.isPhotoChanged(book, prevBook);
+                prevPhoto = prevBook.getPhoto();
+            }
+            //save book
+            bookRepo.save(book);
+            //if book with new updated photo was saved, delete the older photo
+            if(isPhotoChanged) {
+                fileStorageComponent.deletePhoto(prevPhoto);
+            }
+            //send success response
+            return ResponseDto.builder()
+                    .status(true)
+                    .build();
+        }
+        catch (Exception exception) {
+            //if book was not saved delete the uploaded photo which was stored
+            if(responseDto != null && !(fileStorageComponent.isImageDummy(responseDto.getMessage()))) {
+                fileStorageComponent.deletePhoto(responseDto.getMessage());
+            }
+            //executes if duplicate book isbn was entered
+            if (exception.getMessage().contains("isbn")) {
+                return ResponseDto.builder()
+                        .status(false)
+                        .message("Book ISBN already in use")
+                        .build();
+            }
+            //executes if duplicate book name was entered
+            else {
+
+                return ResponseDto.builder()
+                        .status(false)
+                        .message("Book name already in use")
+                        .build();
+            }
+        }
     }
 
     /**
@@ -191,10 +202,9 @@ public class BookServiceImpl implements BookService {
     public ResponseDto deleteEntityById(Integer id) {
         try {
             Book book = bookRepo.getById(id);
-            File photo = new File(book.getPhoto());
-            //first delete book photo
-            log.info("Book Deletion: " + photo.delete());
-            //at last delete book from database
+            if(!(fileStorageComponent.isImageDummy(book.getPhoto()))) {
+                fileStorageComponent.deletePhoto(book.getPhoto());
+            }
             bookRepo.deleteById(id);
             return ResponseDto.builder()
                     .status(true)

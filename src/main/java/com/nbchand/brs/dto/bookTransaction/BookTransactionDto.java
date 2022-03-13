@@ -6,8 +6,10 @@ import com.nbchand.brs.dto.member.MemberDto;
 import com.nbchand.brs.entity.book.Book;
 import com.nbchand.brs.entity.member.Member;
 import com.nbchand.brs.enums.RentType;
-import com.nbchand.brs.service.date.impl.DateServiceImpl;
+import com.nbchand.brs.service.date.DateService;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -62,9 +64,14 @@ public class BookTransactionDto {
 
     private RentType rentType;
 
+    @Component
     public static class BookTransactionDtoBuilder {
-        FileStorageComponent fileStorageComponent = new FileStorageComponent();
-        DateServiceImpl dateService = new DateServiceImpl();
+
+        @Autowired
+        private DateService dateService;
+
+        @Autowired
+        private FileStorageComponent fileStorageComponent;
 
         public BookTransactionDtoBuilder bookDto(Book book) {
             this.bookDto = BookDto.builder()

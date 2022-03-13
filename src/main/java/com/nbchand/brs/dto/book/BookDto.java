@@ -51,7 +51,6 @@ public class BookDto {
 
     private Date publishedDate;
 
-    @NotNull(message = "Book photo can't be empty")
     private MultipartFile photo;
 
     private String photoLocation;
