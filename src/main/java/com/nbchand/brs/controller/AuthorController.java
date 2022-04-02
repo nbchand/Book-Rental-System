@@ -3,6 +3,7 @@ package com.nbchand.brs.controller;
 import com.nbchand.brs.dto.AuthorDto;
 import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.author.AuthorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,26 +19,41 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/author")
+@RequiredArgsConstructor
 public class AuthorController {
 
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
-
+    /**
+     * Display author landing page
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping
     public String displayAuthorLandingPage(Model model) {
         model.addAttribute("authorDtoList", authorService.findAllEntities());
         return "author/authorLanding";
     }
 
+    /**
+     * Display author form
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping("/add-author")
     public String displayAuthorForm(Model model) {
         model.addAttribute("authorDto", AuthorDto.builder().id(null).build());
         return "author/authorForm";
     }
 
+    /**
+     * Creates author
+     * @param authorDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PostMapping
     public String addAuthor(@Valid @ModelAttribute("authorDto") AuthorDto authorDto,
                             BindingResult bindingResult,
@@ -56,6 +72,12 @@ public class AuthorController {
         return "author/authorForm";
     }
 
+    /**
+     * Deletes author by taking id
+     * @param id
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @DeleteMapping("/{id}")
     public String deleteAuthor(@PathVariable("id") Integer id,
                                RedirectAttributes redirectAttributes) {
@@ -64,6 +86,13 @@ public class AuthorController {
         return "redirect:/author";
     }
 
+    /**
+     * Display author form for editing
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @GetMapping("/edit/{id}")
     public String displayAuthorEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
@@ -76,6 +105,15 @@ public class AuthorController {
         return "redirect:/author";
     }
 
+    /**
+     * Update author after editing
+     * @param id
+     * @param authorDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PutMapping("/{id}")
     public String updateAuthor(@PathVariable("id") Integer id,
                                @Valid @ModelAttribute("authorDto") AuthorDto authorDto,
