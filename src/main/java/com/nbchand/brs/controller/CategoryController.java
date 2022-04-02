@@ -3,6 +3,7 @@ package com.nbchand.brs.controller;
 import com.nbchand.brs.dto.CategoryDto;
 import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.category.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,26 +19,41 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/category")
+@RequiredArgsConstructor
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-
+    /**
+     * Displays category landing
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping
     public String displayCategoryLandingPage(Model model) {
         model.addAttribute("categoryDtoList", categoryService.findAllEntities());
         return "category/categoryLanding";
     }
 
+    /**
+     * Displays category form
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping("/add-category")
     public String displayCategoryForm(Model model) {
         model.addAttribute("categoryDto", CategoryDto.builder().id(null).build());
         return "category/categoryForm";
     }
 
+    /**
+     * Creates category
+     * @param categoryDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PostMapping
     public String addCategory(@Valid @ModelAttribute("categoryDto") CategoryDto categoryDto,
                             BindingResult bindingResult,
@@ -56,6 +72,12 @@ public class CategoryController {
         return "category/categoryForm";
     }
 
+    /**
+     * Deletes category by its id
+     * @param id
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @DeleteMapping("/{id}")
     public String deleteCategory(@PathVariable("id") Integer id,
                                RedirectAttributes redirectAttributes) {
@@ -64,6 +86,13 @@ public class CategoryController {
         return "redirect:/category";
     }
 
+    /**
+     * Display category form for editing
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @GetMapping("/edit/{id}")
     public String displayCategoryEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
@@ -76,6 +105,15 @@ public class CategoryController {
         return "redirect:/category";
     }
 
+    /**
+     * Updates category after editing
+     * @param id
+     * @param categoryDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PutMapping("/{id}")
     public String updateCategory(@PathVariable("id") Integer id,
                                @Valid @ModelAttribute("categoryDto") CategoryDto categoryDto,
