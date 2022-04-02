@@ -6,6 +6,7 @@ import com.nbchand.brs.enums.RentType;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.bookTransaction.BookTransactionService;
 import com.nbchand.brs.service.member.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,30 +21,41 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping("/return")
+@RequiredArgsConstructor
 public class ReturnBookController {
 
-    private BookTransactionService bookTransactionService;
-    private MemberService memberService;
-    private BookService bookService;
+    private final BookTransactionService bookTransactionService;
+    private final MemberService memberService;
+    private final BookService bookService;
 
-    public ReturnBookController(BookTransactionService bookTransactionService, MemberService memberService, BookService bookService) {
-        this.bookTransactionService = bookTransactionService;
-        this.memberService = memberService;
-        this.bookService = bookService;
-    }
-
+    /**
+     * Display book return landing page
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping
     public String displayReturnLanding(Model model) {
         model.addAttribute("bookTransactionDtoList", bookTransactionService.findTransactionsByRentType(RentType.RETURN));
         return "return/returnLanding";
     }
 
+    /**
+     * Display book return form
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping("/create")
     public String displayReturnForm(Model model) {
         model.addAttribute("codeList", bookTransactionService.getAllTransactionCode());
         return "return/returnForm";
     }
 
+    /**
+     * Send transaction data to the ajax call on the basis of provided code
+     * @param code unique code for the transaction
+     * @return json data
+     * @throws Exception
+     */
     @PostMapping("/data")
     @ResponseBody
     public BookTransactionDto sendTransactionData(@RequestBody String code) throws Exception {
@@ -54,6 +66,12 @@ public class ReturnBookController {
         throw new Exception("Transaction not found");
     }
 
+    /**
+     * Create return transaction by updating the rented transaction
+     * @param code
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PostMapping
     public String addReturnTransaction(@ModelAttribute("code") String code, RedirectAttributes redirectAttributes) {
         ResponseDto responseDto = bookTransactionService.findTransactionByCode(code);
@@ -69,6 +87,12 @@ public class ReturnBookController {
         return "redirect:/return/create";
     }
 
+    /**
+     * Deletes the provided return transaction
+     * @param id
+     * @param redirectAttributes
+     * @return
+     */
     @DeleteMapping("/{id}")
     public String deleteReturnTransaction(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         ResponseDto responseDto = bookTransactionService.deleteEntityById(id);
