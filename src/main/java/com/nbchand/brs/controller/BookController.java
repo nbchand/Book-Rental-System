@@ -6,6 +6,7 @@ import com.nbchand.brs.service.author.AuthorService;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.category.CategoryService;
 import com.nbchand.brs.service.date.DateService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,29 +22,30 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/book")
+@RequiredArgsConstructor
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
+    private final CategoryService categoryService;
+    private final AuthorService authorService;
+    private final DateService dateService;
 
-    private CategoryService categoryService;
-
-    private AuthorService authorService;
-
-    private DateService dateService;
-
-    public BookController(BookService bookService, CategoryService categoryService, AuthorService authorService, DateService dateService) {
-        this.bookService = bookService;
-        this.categoryService = categoryService;
-        this.authorService = authorService;
-        this.dateService = dateService;
-    }
-
+    /**
+     * Displays book landing page
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping
     public String displayBookLanding(Model model){
         model.addAttribute("bookDtoList", bookService.findAllEntities());
         return "book/bookLanding";
     }
 
+    /**
+     * Displays book form
+     * @param model
+     * @return respective web-page
+     */
     @GetMapping("/add-book")
     public String displayBookForm(Model model){
         model.addAttribute("allCategories", categoryService.findAllEntities());
@@ -53,6 +55,14 @@ public class BookController {
         return "book/bookForm";
     }
 
+    /**
+     * Creates book
+     * @param bookDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PostMapping
     public String addBook(@Valid @ModelAttribute("bookDto") BookDto bookDto,
                             BindingResult bindingResult,
@@ -79,6 +89,13 @@ public class BookController {
         return "book/bookForm";
     }
 
+    /**
+     * Displays book form for editing
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @GetMapping("/edit/{id}")
     public String displayBookEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
@@ -94,6 +111,15 @@ public class BookController {
         return "redirect:/author";
     }
 
+    /**
+     * Updates book after editing
+     * @param id
+     * @param bookDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @PutMapping("/{id}")
     public String updateBook(@PathVariable("id") Integer id,
                                @Valid @ModelAttribute("bookDto") BookDto bookDto,
@@ -122,6 +148,12 @@ public class BookController {
         return "book/bookForm";
     }
 
+    /**
+     * Deletes the book by id
+     * @param id
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable("id") Integer id,
                                RedirectAttributes redirectAttributes) {
@@ -130,6 +162,13 @@ public class BookController {
         return "redirect:/book";
     }
 
+    /**
+     * Displays the whole book information
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return respective web-page
+     */
     @GetMapping("/{id}")
     public String displayBookDescription(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes){
         ResponseDto responseDto = bookService.findEntityById(id);
