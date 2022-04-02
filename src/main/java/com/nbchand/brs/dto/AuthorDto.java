@@ -1,11 +1,14 @@
-package com.nbchand.brs.dto.author;
+package com.nbchand.brs.dto;
 
+import com.nbchand.brs.entity.Author;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Narendra
@@ -32,4 +35,19 @@ public class AuthorDto {
     @NotEmpty(message = "Author mobile number must not be empty")
     @Pattern(regexp = "^\\d{10}$", message = "Mobile number must be of 10 digits")
     private String mobileNumber;
+
+    public AuthorDto(Author author) {
+        this.id = author.getId();
+        this.name = author.getName();
+        this.email = author.getEmail();
+        this.mobileNumber = author.getMobileNumber();
+    }
+
+    public static List<AuthorDto> authorsToAuthorDtos(List<Author> authorList) {
+        List<AuthorDto> authorDtoList = new ArrayList<>();
+        for(Author author: authorList) {
+            authorDtoList.add(new AuthorDto(author));
+        }
+        return authorDtoList;
+    }
 }

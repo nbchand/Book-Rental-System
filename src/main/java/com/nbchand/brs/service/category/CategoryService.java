@@ -1,6 +1,6 @@
 package com.nbchand.brs.service.category;
 
-import com.nbchand.brs.dto.category.CategoryDto;
+import com.nbchand.brs.dto.CategoryDto;
 import com.nbchand.brs.service.GenericCrudService;
 
 /**

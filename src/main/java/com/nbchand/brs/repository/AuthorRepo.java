@@ -1,6 +1,6 @@
-package com.nbchand.brs.repository.author;
+package com.nbchand.brs.repository;
 
-import com.nbchand.brs.entity.author.Author;
+import com.nbchand.brs.entity.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

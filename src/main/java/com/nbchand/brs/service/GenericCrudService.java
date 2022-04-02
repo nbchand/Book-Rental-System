@@ -1,6 +1,6 @@
 package com.nbchand.brs.service;
 
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.ResponseDto;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import java.util.List;
  * @since 2022-02-24
  */
 public interface GenericCrudService<T> {
-    public ResponseDto saveEntity(T t);
+    ResponseDto saveEntity(T t);
 
-    public List<T> findAllEntities();
+    List<T> findAllEntities();
 
-    public ResponseDto findEntityById(Integer id);
+    ResponseDto findEntityById(Integer id);
 
-    public ResponseDto deleteEntityById(Integer id);
+    ResponseDto deleteEntityById(Integer id);
 }

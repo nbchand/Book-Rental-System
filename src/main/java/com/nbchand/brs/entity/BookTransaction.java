@@ -1,7 +1,5 @@
-package com.nbchand.brs.entity.bookTransaction;
+package com.nbchand.brs.entity;
 
-import com.nbchand.brs.entity.book.Book;
-import com.nbchand.brs.entity.member.Member;
 import com.nbchand.brs.enums.RentType;
 import lombok.*;
 
@@ -37,6 +35,8 @@ public class BookTransaction {
     private Date fromDate;
 
     private Date toDate;
+
+    private Date returnedDate;
 
     @Enumerated(value = EnumType.STRING)
     private RentType rentType;

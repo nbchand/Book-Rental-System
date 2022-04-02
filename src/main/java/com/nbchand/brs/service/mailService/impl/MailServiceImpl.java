@@ -1,6 +1,6 @@
 package com.nbchand.brs.service.mailService.impl;
 
-import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.AuthorDto;
 import com.nbchand.brs.service.mailService.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;

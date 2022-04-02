@@ -1,10 +1,8 @@
 package com.nbchand.brs.component;
 
-import com.nbchand.brs.dto.book.BookDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.book.Book;
-import com.nbchand.brs.repository.book.BookRepo;
-import lombok.RequiredArgsConstructor;
+import com.nbchand.brs.dto.BookDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Book;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
@@ -23,10 +21,8 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class FileStorageComponent {
 
-    private final BookRepo bookRepo;
     private final String DUMMYIMAGE = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "static" + File.separator + "image"
             + File.separator + "dummy.jpg";

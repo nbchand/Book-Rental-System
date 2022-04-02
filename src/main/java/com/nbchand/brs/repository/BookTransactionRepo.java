@@ -1,6 +1,6 @@
-package com.nbchand.brs.repository.bookTransaction;
+package com.nbchand.brs.repository;
 
-import com.nbchand.brs.entity.bookTransaction.BookTransaction;
+import com.nbchand.brs.entity.BookTransaction;
 import com.nbchand.brs.enums.RentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

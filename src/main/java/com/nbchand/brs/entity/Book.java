@@ -1,13 +1,9 @@
-package com.nbchand.brs.entity.book;
+package com.nbchand.brs.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nbchand.brs.entity.author.Author;
-import com.nbchand.brs.entity.bookTransaction.BookTransaction;
-import com.nbchand.brs.entity.category.Category;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

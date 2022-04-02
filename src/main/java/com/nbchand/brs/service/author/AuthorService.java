@@ -1,6 +1,6 @@
 package com.nbchand.brs.service.author;
 
-import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.AuthorDto;
 import com.nbchand.brs.service.GenericCrudService;
 
 /**

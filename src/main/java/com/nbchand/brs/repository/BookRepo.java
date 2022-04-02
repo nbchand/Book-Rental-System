@@ -1,6 +1,6 @@
-package com.nbchand.brs.repository.book;
+package com.nbchand.brs.repository;
 
-import com.nbchand.brs.entity.book.Book;
+import com.nbchand.brs.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

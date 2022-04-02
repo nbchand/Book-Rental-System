@@ -1,7 +1,7 @@
-package com.nbchand.brs.controller.transaction.rentBook;
+package com.nbchand.brs.controller.transaction;
 
-import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.BookTransactionDto;
+import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.enums.RentType;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.bookTransaction.BookTransactionService;

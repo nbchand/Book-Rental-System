@@ -1,12 +1,12 @@
 package com.nbchand.brs.service.book.impl;
 
 import com.nbchand.brs.component.FileStorageComponent;
-import com.nbchand.brs.dto.book.BookDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.book.Book;
-import com.nbchand.brs.repository.author.AuthorRepo;
-import com.nbchand.brs.repository.book.BookRepo;
-import com.nbchand.brs.repository.category.CategoryRepo;
+import com.nbchand.brs.dto.BookDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Book;
+import com.nbchand.brs.repository.AuthorRepo;
+import com.nbchand.brs.repository.BookRepo;
+import com.nbchand.brs.repository.CategoryRepo;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.date.DateService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Narendra
@@ -140,20 +139,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> findAllEntities() {
         List<Book> books = bookRepo.findAll();
-        List<BookDto> bookDtoList = books.stream().map(book ->
-                BookDto.builder()
-                        .id(book.getId())
-                        .name(book.getName())
-                        .numberOfPages(book.getNumberOfPages())
-                        .categoryDto(book.getCategory())
-                        .authorDtoList(book.getAuthors())
-                        .isbn(book.getIsbn())
-                        .publishedDateString(dateService.getDateString(book.getPublishedDate()))
-                        .stockCount(book.getStockCount())
-                        .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
-                        .rating(book.getRating())
-                        .build()
-        ).collect(Collectors.toList());
+        List<BookDto> bookDtoList = BookDto.booksToBookDtos(books);
         return bookDtoList;
     }
 
@@ -166,21 +152,7 @@ public class BookServiceImpl implements BookService {
     public ResponseDto findEntityById(Integer id) {
         try {
             Book book = bookRepo.getById(id);
-            BookDto bookDto = BookDto.builder()
-                    .id(book.getId())
-                    .name(book.getName())
-                    .numberOfPages(book.getNumberOfPages())
-                    .categoryDto(book.getCategory())
-                    .authorDtoList(book.getAuthors())
-                    .categoryId(book.getCategory().getId())
-                    .authorIds(book.getAuthors().stream().map(author ->
-                            author.getId()).collect(Collectors.toList()))
-                    .isbn(book.getIsbn())
-                    .publishedDateString(dateService.getDateString(book.getPublishedDate()))
-                    .stockCount(book.getStockCount())
-                    .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
-                    .rating(book.getRating())
-                    .build();
+            BookDto bookDto = new BookDto(book);
             return ResponseDto.builder()
                     .bookDto(bookDto)
                     .status(true)
@@ -247,20 +219,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> findAllBooksInStock() {
         List<Book> books = bookRepo.findAllByStockCountIsGreaterThan(0);
-        List<BookDto> bookDtoList = books.stream().map(book ->
-                BookDto.builder()
-                        .id(book.getId())
-                        .name(book.getName())
-                        .numberOfPages(book.getNumberOfPages())
-                        .categoryDto(book.getCategory())
-                        .authorDtoList(book.getAuthors())
-                        .isbn(book.getIsbn())
-                        .publishedDateString(dateService.getDateString(book.getPublishedDate()))
-                        .stockCount(book.getStockCount())
-                        .photoLocation(fileStorageComponent.returnFileAsBase64(book.getPhoto()))
-                        .rating(book.getRating())
-                        .build()
-        ).collect(Collectors.toList());
+        List<BookDto> bookDtoList = BookDto.booksToBookDtos(books);
         return bookDtoList;
     }
 }

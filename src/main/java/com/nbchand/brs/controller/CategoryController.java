@@ -1,7 +1,7 @@
-package com.nbchand.brs.controller.category;
+package com.nbchand.brs.controller;
 
-import com.nbchand.brs.dto.category.CategoryDto;
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.CategoryDto;
+import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.category.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

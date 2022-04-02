@@ -1,18 +1,17 @@
-package com.nbchand.brs.controller.transaction.returnBook;
+package com.nbchand.brs.controller.transaction;
 
-import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.BookTransactionDto;
+import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.enums.RentType;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.bookTransaction.BookTransactionService;
 import com.nbchand.brs.service.member.MemberService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import java.util.Date;
 
 /**
  * @author Narendra
@@ -58,10 +57,10 @@ public class ReturnBookController {
     @PostMapping
     public String addReturnTransaction(@ModelAttribute("code") String code, RedirectAttributes redirectAttributes) {
         ResponseDto responseDto = bookTransactionService.findTransactionByCode(code);
-        System.out.println(responseDto.getBookTransactionDto().getMember().getName());
         if(responseDto.isStatus()) {
             BookTransactionDto bookTransactionDto = responseDto.getBookTransactionDto();
             bookTransactionDto.setRentType(RentType.RETURN);
+            bookTransactionDto.setReturnedDate(new Date());
             bookTransactionService.saveEntity(bookTransactionDto);
             redirectAttributes.addFlashAttribute("errorMessage", "Book returned successfully");
             return "redirect:/return";

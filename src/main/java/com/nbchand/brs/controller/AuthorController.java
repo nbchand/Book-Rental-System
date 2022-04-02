@@ -1,7 +1,7 @@
-package com.nbchand.brs.controller.author;
+package com.nbchand.brs.controller;
 
-import com.nbchand.brs.dto.author.AuthorDto;
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.AuthorDto;
+import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.author.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

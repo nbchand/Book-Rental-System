@@ -26,13 +26,19 @@
                 <th>S.N</th>
                 <th>Book Name</th>
                 <th>Member Name</th>
+                <th>Rented</th>
+                <th>To be returned</th>
+                <th>Returned</th>
                 <th>Code</th>
                 <th>Action</th>
             </tr>
             <tr th:each="bookTransactionDto, iterator: ${bookTransactionDtoList}">
                 <td th:text="${iterator.count}"></td>
-                <td th:text="${bookTransactionDto.bookDto.name}"></td>
+                <td><a th:href="@{~/book/}+${bookTransactionDto.bookDto.id}" th:text="${bookTransactionDto.bookDto.name}"></a></td>
                 <td th:text="${bookTransactionDto.memberDto.name}"></td>
+                <td th:text="${bookTransactionDto.fromDateString}"></td>
+                <td th:text="${bookTransactionDto.toDateString}"></td>
+                <td th:text="${bookTransactionDto.returnedDateString}"></td>
                 <td th:text="${bookTransactionDto.code}"></td>
                 <td>
                     <form class="delete-form" style="display: inline;" th:method="delete" th:action="@{~/return/}+${bookTransactionDto.id}">

@@ -1,6 +1,6 @@
 package com.nbchand.brs.service.member;
 
-import com.nbchand.brs.dto.member.MemberDto;
+import com.nbchand.brs.dto.MemberDto;
 import com.nbchand.brs.service.GenericCrudService;
 
 /**

@@ -1,6 +1,6 @@
 package com.nbchand.brs.service.mailService;
 
-import com.nbchand.brs.dto.author.AuthorDto;
+import com.nbchand.brs.dto.AuthorDto;
 
 /**
  * @author Narendra

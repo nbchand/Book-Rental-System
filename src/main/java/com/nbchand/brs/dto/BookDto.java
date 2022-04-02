@@ -1,13 +1,15 @@
-package com.nbchand.brs.dto.book;
+package com.nbchand.brs.dto;
 
-import com.nbchand.brs.dto.author.AuthorDto;
-import com.nbchand.brs.dto.category.CategoryDto;
-import com.nbchand.brs.entity.author.Author;
-import com.nbchand.brs.entity.category.Category;
+import com.nbchand.brs.component.FileStorageComponent;
+import com.nbchand.brs.entity.Author;
+import com.nbchand.brs.entity.Book;
+import com.nbchand.brs.entity.Category;
+import com.nbchand.brs.service.date.impl.DateServiceImpl;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,29 +72,28 @@ public class BookDto {
 
     private List<Author> authors;
 
-    public static class BookDtoBuilder {
-        public BookDtoBuilder categoryDto(Category category) {
+    public BookDto(Book book) {
+        DateServiceImpl dateService = new DateServiceImpl();
+        FileStorageComponent fileStorageComponent = new FileStorageComponent();
+        this.id = book.getId();
+        this.name = book.getName();
+        this.numberOfPages = book.getNumberOfPages();
+        this.isbn = book.getIsbn();
+        this.rating = book.getRating();
+        this.stockCount = book.getStockCount();
+        this.publishedDateString = dateService.getDateString(book.getPublishedDate());
+        this.photoLocation = fileStorageComponent.returnFileAsBase64(book.getPhoto());
+        this.categoryDto = new CategoryDto(book.getCategory());
+        this.authorDtoList = AuthorDto.authorsToAuthorDtos(book.getAuthors());
+        this.categoryId = categoryDto.getId();
+        this.authorIds = authorDtoList.stream().map(authorDto -> authorDto.getId()).collect(Collectors.toList());
+    }
 
-            this.categoryDto = CategoryDto.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .description(category.getDescription())
-                    .build();
-            return this;
+    public static List<BookDto> booksToBookDtos(List<Book> books) {
+        List<BookDto> bookDtoList = new ArrayList<>();
+        for(Book book: books) {
+            bookDtoList.add(new BookDto(book));
         }
-
-        public BookDtoBuilder authorDtoList(List<Author> authors) {
-
-            this.authorDtoList = authors.stream().map(author ->
-                    AuthorDto.builder()
-                            .id(author.getId())
-                            .name(author.getName())
-                            .email(author.getEmail())
-                            .mobileNumber(author.getMobileNumber())
-                            .build()
-            ).collect(Collectors.toList());
-
-            return this;
-        }
+        return bookDtoList;
     }
 }

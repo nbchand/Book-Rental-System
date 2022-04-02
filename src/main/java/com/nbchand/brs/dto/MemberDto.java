@@ -1,11 +1,14 @@
-package com.nbchand.brs.dto.member;
+package com.nbchand.brs.dto;
 
+import com.nbchand.brs.entity.Member;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Narendra
@@ -36,4 +39,20 @@ public class MemberDto {
     @NotEmpty(message = "Member address must not be empty")
     @Size(max = 80, message = "Member address can only be upto 80 characters")
     private String address;
+
+    public MemberDto(Member member) {
+        this.id = member.getId();
+        this.name = member.getName();
+        this.mobileNumber = member.getMobileNumber();
+        this.email = member.getEmail();
+        this.address = member.getAddress();
+    }
+
+    public static List<MemberDto> membersToMemberDtos(List<Member> members) {
+        List<MemberDto> memberDtoList = new ArrayList<>();
+        for (Member member: members) {
+            memberDtoList.add(new MemberDto(member));
+        }
+        return memberDtoList;
+    }
 }

@@ -1,14 +1,14 @@
 package com.nbchand.brs.service.category.impl;
 
-import com.nbchand.brs.dto.category.CategoryDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.category.Category;
-import com.nbchand.brs.repository.category.CategoryRepo;
+import com.nbchand.brs.dto.CategoryDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Category;
+import com.nbchand.brs.repository.CategoryRepo;
 import com.nbchand.brs.service.category.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Narendra
@@ -16,13 +16,10 @@ import java.util.stream.Collectors;
  * @since 2022-02-26
  */
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepo categoryRepo;
-
-    public CategoryServiceImpl(CategoryRepo categoryRepo) {
-        this.categoryRepo = categoryRepo;
-    }
+    private final CategoryRepo categoryRepo;
 
     @Override
     public ResponseDto saveEntity(CategoryDto categoryDto) {
@@ -50,14 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findAllEntities() {
         List<Category> categories = categoryRepo.findAll();
-        List<CategoryDto> categoryDtoList = categories.stream().map(category ->
-                CategoryDto.builder()
-                        .id(category.getId())
-                        .name(category.getName())
-                        .description(category.getDescription())
-                        .build()
-        ).collect(Collectors.toList());
-
+        List<CategoryDto> categoryDtoList = CategoryDto.CategoriesToCategoryDtos(categories);
         return categoryDtoList;
     }
 
@@ -65,11 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseDto findEntityById(Integer id) {
         try {
             Category category = categoryRepo.getById(id);
-            CategoryDto categoryDto = CategoryDto.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .description(category.getDescription())
-                    .build();
+            CategoryDto categoryDto = new CategoryDto(category);
             return ResponseDto.builder()
                     .status(true)
                     .categoryDto(categoryDto)

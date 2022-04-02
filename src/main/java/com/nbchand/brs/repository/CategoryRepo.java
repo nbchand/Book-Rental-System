@@ -1,6 +1,6 @@
-package com.nbchand.brs.repository.category;
+package com.nbchand.brs.repository;
 
-import com.nbchand.brs.entity.category.Category;
+import com.nbchand.brs.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

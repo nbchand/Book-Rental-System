@@ -1,7 +1,7 @@
-package com.nbchand.brs.controller.book;
+package com.nbchand.brs.controller;
 
-import com.nbchand.brs.dto.book.BookDto;
-import com.nbchand.brs.dto.response.ResponseDto;
+import com.nbchand.brs.dto.BookDto;
+import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.author.AuthorService;
 import com.nbchand.brs.service.book.BookService;
 import com.nbchand.brs.service.category.CategoryService;
@@ -119,7 +119,7 @@ public class BookController {
         model.addAttribute("allAuthors", authorService.findAllEntities());
         model.addAttribute("dateToday", dateService.getTodayDateString());
         model.addAttribute("bookDto", bookDto);
-        return "author/authorForm";
+        return "book/bookForm";
     }
 
     @DeleteMapping("/{id}")

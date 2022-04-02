@@ -1,10 +1,5 @@
-package com.nbchand.brs.dto.response;
+package com.nbchand.brs.dto;
 
-import com.nbchand.brs.dto.author.AuthorDto;
-import com.nbchand.brs.dto.book.BookDto;
-import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
-import com.nbchand.brs.dto.category.CategoryDto;
-import com.nbchand.brs.dto.member.MemberDto;
 import lombok.*;
 
 /**
@@ -17,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class ResponseDto {
     private boolean status;
     private String message;

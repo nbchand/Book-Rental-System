@@ -1,6 +1,6 @@
-package com.nbchand.brs.repository.member;
+package com.nbchand.brs.repository;
 
-import com.nbchand.brs.entity.member.Member;
+import com.nbchand.brs.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

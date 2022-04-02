@@ -1,15 +1,15 @@
 package com.nbchand.brs.service.author.impl;
 
-import com.nbchand.brs.dto.author.AuthorDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.author.Author;
-import com.nbchand.brs.repository.author.AuthorRepo;
+import com.nbchand.brs.dto.AuthorDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Author;
+import com.nbchand.brs.repository.AuthorRepo;
 import com.nbchand.brs.service.author.AuthorService;
 import com.nbchand.brs.service.mailService.MailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Narendra
@@ -17,16 +17,12 @@ import java.util.stream.Collectors;
  * @since 2022-02-24
  */
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-    private AuthorRepo authorRepo;
+    private final AuthorRepo authorRepo;
 
-    private MailService mailService;
-
-    public AuthorServiceImpl(AuthorRepo authorRepo, MailService mailService) {
-        this.authorRepo = authorRepo;
-        this.mailService = mailService;
-    }
+    private final MailService mailService;
 
     /**
      * Takes AuthorDto, maps it into author and saves the author into database
@@ -90,15 +86,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorDto> findAllEntities() {
         List<Author> authors = authorRepo.findAll();
-        List<AuthorDto> authorDtoList = authors.stream().map(author ->
-                AuthorDto.builder()
-                        .email(author.getEmail())
-                        .mobileNumber(author.getMobileNumber())
-                        .name(author.getName())
-                        .id(author.getId())
-                        .build()
-        ).collect(Collectors.toList());
-
+        List<AuthorDto> authorDtoList = AuthorDto.authorsToAuthorDtos(authors);
         return authorDtoList;
     }
 
@@ -111,12 +99,7 @@ public class AuthorServiceImpl implements AuthorService {
     public ResponseDto findEntityById(Integer id) {
         try {
             Author author = authorRepo.getById(id);
-            AuthorDto authorDto = AuthorDto.builder()
-                    .email(author.getEmail())
-                    .name(author.getName())
-                    .mobileNumber(author.getMobileNumber())
-                    .id(author.getId())
-                    .build();
+            AuthorDto authorDto = new AuthorDto(author);
             return ResponseDto.builder()
                     .status(true)
                     .authorDto(authorDto)

@@ -1,14 +1,14 @@
 package com.nbchand.brs.service.member.impl;
 
-import com.nbchand.brs.dto.member.MemberDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.member.Member;
-import com.nbchand.brs.repository.member.MemberRepo;
+import com.nbchand.brs.dto.MemberDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Member;
+import com.nbchand.brs.repository.MemberRepo;
 import com.nbchand.brs.service.member.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Narendra
@@ -16,13 +16,10 @@ import java.util.stream.Collectors;
  * @since 2022-02-26
  */
 @Service
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private MemberRepo memberRepo;
-
-    public MemberServiceImpl(MemberRepo memberRepo) {
-        this.memberRepo = memberRepo;
-    }
+    private final MemberRepo memberRepo;
 
     @Override
     public ResponseDto saveEntity(MemberDto memberDto) {
@@ -60,15 +57,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberDto> findAllEntities() {
         List<Member> members = memberRepo.findAll();
-        List<MemberDto> memberDtoList = members.stream().map(member ->
-                MemberDto.builder()
-                        .id(member.getId())
-                        .email(member.getEmail())
-                        .mobileNumber(member.getMobileNumber())
-                        .name(member.getName())
-                        .address(member.getAddress())
-                        .build()
-        ).collect(Collectors.toList());
+        List<MemberDto> memberDtoList = MemberDto.membersToMemberDtos(members);
 
         return memberDtoList;
     }
@@ -77,13 +66,7 @@ public class MemberServiceImpl implements MemberService {
     public ResponseDto findEntityById(Integer id) {
         try {
             Member member = memberRepo.getById(id);
-            MemberDto memberDto = MemberDto.builder()
-                    .id(member.getId())
-                    .email(member.getEmail())
-                    .name(member.getName())
-                    .mobileNumber(member.getMobileNumber())
-                    .address(member.getAddress())
-                    .build();
+            MemberDto memberDto = new MemberDto(member);
             return ResponseDto.builder()
                     .status(true)
                     .memberDto(memberDto)

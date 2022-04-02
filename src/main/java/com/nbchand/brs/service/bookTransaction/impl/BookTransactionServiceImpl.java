@@ -1,19 +1,19 @@
 package com.nbchand.brs.service.bookTransaction.impl;
 
-import com.nbchand.brs.dto.bookTransaction.BookTransactionDto;
-import com.nbchand.brs.dto.response.ResponseDto;
-import com.nbchand.brs.entity.book.Book;
-import com.nbchand.brs.entity.bookTransaction.BookTransaction;
+import com.nbchand.brs.dto.BookTransactionDto;
+import com.nbchand.brs.dto.ResponseDto;
+import com.nbchand.brs.entity.Book;
+import com.nbchand.brs.entity.BookTransaction;
 import com.nbchand.brs.enums.RentType;
-import com.nbchand.brs.repository.book.BookRepo;
-import com.nbchand.brs.repository.bookTransaction.BookTransactionRepo;
-import com.nbchand.brs.repository.member.MemberRepo;
+import com.nbchand.brs.repository.BookRepo;
+import com.nbchand.brs.repository.BookTransactionRepo;
+import com.nbchand.brs.repository.MemberRepo;
 import com.nbchand.brs.service.bookTransaction.BookTransactionService;
 import com.nbchand.brs.service.date.DateService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Narendra
@@ -21,19 +21,13 @@ import java.util.stream.Collectors;
  * @since 2022-03-02
  */
 @Service
+@RequiredArgsConstructor
 public class BookTransactionServiceImpl implements BookTransactionService {
 
-    private BookTransactionRepo bookTransactionRepo;
-    private BookRepo bookRepo;
-    private MemberRepo memberRepo;
-    private DateService dateService;
-
-    public BookTransactionServiceImpl(BookTransactionRepo bookTransactionRepo, BookRepo bookRepo, MemberRepo memberRepo, DateService dateService) {
-        this.bookTransactionRepo = bookTransactionRepo;
-        this.bookRepo = bookRepo;
-        this.memberRepo = memberRepo;
-        this.dateService = dateService;
-    }
+    private final BookTransactionRepo bookTransactionRepo;
+    private final BookRepo bookRepo;
+    private final MemberRepo memberRepo;
+    private final DateService dateService;
 
     /**
      * Saves BookTransaction to the database
@@ -43,6 +37,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     @Override
     public ResponseDto saveEntity(BookTransactionDto bookTransactionDto) {
         BookTransaction bookTransaction = BookTransaction.builder()
+                .id(bookTransactionDto.getId())
                 .book(bookTransactionDto.getBook())
                 .member(bookTransactionDto.getMember())
                 .toDate(bookTransactionDto.getToDate())
@@ -50,9 +45,9 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                 .rentType(bookTransactionDto.getRentType())
                 .code(bookTransactionDto.getCode())
                 .build();
-        //if BookTransaction is meant to be edited assign id to it
-        if (bookTransactionDto.getId() != null) {
-            bookTransaction.setId(bookTransactionDto.getId());
+
+        if(bookTransactionDto.getRentType().equals(RentType.RETURN)) {
+            bookTransaction.setReturnedDate(bookTransactionDto.getReturnedDate());
         }
         //exception handling for unique key violation
         try {
@@ -81,11 +76,11 @@ public class BookTransactionServiceImpl implements BookTransactionService {
                     currentBook.setStockCount(currentBook.getStockCount() + 1);
                 }
             }
-            bookRepo.save(currentBook);
-            bookTransactionRepo.save(bookTransaction);
-            return ResponseDto.builder()
-                    .status(true)
-                    .build();
+                bookRepo.save(currentBook);
+                bookTransactionRepo.save(bookTransaction);
+                return ResponseDto.builder()
+                        .status(true)
+                        .build();
         } catch (Exception exception) {
             return ResponseDto.builder()
                     .status(false)
@@ -102,18 +97,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     @Override
     public List<BookTransactionDto> findAllEntities() {
         List<BookTransaction> bookTransactions = bookTransactionRepo.findAll();
-        List<BookTransactionDto> bookTransactionDtoList = bookTransactions.stream().map(bookTransaction ->
-                        BookTransactionDto.builder()
-                                .rentType(bookTransaction.getRentType())
-                                .bookDto(bookTransaction.getBook())
-                                .memberDto(bookTransaction.getMember())
-                                .id(bookTransaction.getId())
-                                .code(bookTransaction.getCode())
-                                .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
-                                .toDateString(dateService.getDateString(bookTransaction.getToDate()))
-                                .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
-                                .build())
-                .collect(Collectors.toList());
+        List<BookTransactionDto> bookTransactionDtoList = BookTransactionDto.transactionsToTransactionDto(bookTransactions);
         return bookTransactionDtoList;
     }
 
@@ -126,22 +110,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     public ResponseDto findEntityById(Integer id) {
         try {
             BookTransaction bookTransaction = bookTransactionRepo.getById(id);
-            BookTransactionDto bookTransactionDto = BookTransactionDto.builder()
-                    .rentType(bookTransaction.getRentType())
-                    .bookDto(bookTransaction.getBook())
-                    .memberDto(bookTransaction.getMember())
-                    .member(bookTransaction.getMember())
-                    .book(bookTransaction.getBook())
-                    .bookId(bookTransaction.getBook().getId())
-                    .memberId(bookTransaction.getMember().getId())
-                    .id(bookTransaction.getId())
-                    .code(bookTransaction.getCode())
-                    .fromDate(bookTransaction.getFromDate())
-                    .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
-                    .toDate(bookTransaction.getToDate())
-                    .toDateString(dateService.getDateString(bookTransaction.getToDate()))
-                    .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
-                    .build();
+            BookTransactionDto bookTransactionDto = new BookTransactionDto(bookTransaction);
             return ResponseDto.builder()
                     .status(true)
                     .bookTransactionDto(bookTransactionDto)
@@ -213,18 +182,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     @Override
     public List<BookTransactionDto> findTransactionsByRentType(RentType rentType) {
         List<BookTransaction> bookTransactions = bookTransactionRepo.findAllByRentType(rentType);
-        List<BookTransactionDto> bookTransactionDtoList = bookTransactions.stream().map(bookTransaction ->
-                        BookTransactionDto.builder()
-                                .rentType(bookTransaction.getRentType())
-                                .bookDto(bookTransaction.getBook())
-                                .memberDto(bookTransaction.getMember())
-                                .id(bookTransaction.getId())
-                                .code(bookTransaction.getCode())
-                                .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
-                                .toDateString(dateService.getDateString(bookTransaction.getToDate()))
-                                .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
-                                .build())
-                .collect(Collectors.toList());
+        List<BookTransactionDto> bookTransactionDtoList = BookTransactionDto.transactionsToTransactionDto(bookTransactions);
         return bookTransactionDtoList;
     }
 
@@ -246,22 +204,7 @@ public class BookTransactionServiceImpl implements BookTransactionService {
     public ResponseDto findTransactionByCode(String code) {
         try {
             BookTransaction bookTransaction = bookTransactionRepo.findBookTransactionByCode(code);
-            BookTransactionDto bookTransactionDto = BookTransactionDto.builder()
-                    .rentType(bookTransaction.getRentType())
-                    .bookDto(bookTransaction.getBook())
-                    .book(bookTransaction.getBook())
-                    .member(bookTransaction.getMember())
-                    .memberDto(bookTransaction.getMember())
-                    .bookId(bookTransaction.getBook().getId())
-                    .memberId(bookTransaction.getMember().getId())
-                    .id(bookTransaction.getId())
-                    .code(bookTransaction.getCode())
-                    .fromDate(bookTransaction.getFromDate())
-                    .fromDateString(dateService.getDateString(bookTransaction.getFromDate()))
-                    .toDate(bookTransaction.getToDate())
-                    .toDateString(dateService.getDateString(bookTransaction.getToDate()))
-                    .noOfDays(dateService.findDifferenceInDays(bookTransaction.getToDate(), bookTransaction.getFromDate()))
-                    .build();
+            BookTransactionDto bookTransactionDto = new BookTransactionDto(bookTransaction);
             return ResponseDto.builder()
                     .status(true)
                     .bookTransactionDto(bookTransactionDto)
