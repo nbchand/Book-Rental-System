@@ -21,22 +21,27 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepo categoryRepo;
 
+    /**
+     * Saves category to the database
+     * @param categoryDto
+     * @return saving response
+     */
     @Override
     public ResponseDto saveEntity(CategoryDto categoryDto) {
         Category category = Category.builder()
+                .id(categoryDto.getId())
                 .name(categoryDto.getName())
                 .description(categoryDto.getDescription())
                 .build();
-        if (categoryDto.getId() != null) {
-            category.setId(categoryDto.getId());
-        }
 
         try {
             categoryRepo.save(category);
             return ResponseDto.builder()
                     .status(true)
                     .build();
-        } catch (Exception exception) {
+        }
+        //category may not be saved if category name is already present
+        catch (Exception exception) {
             return ResponseDto.builder()
                     .status(false)
                     .message("Category name already taken")
@@ -44,6 +49,10 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    /**
+     * Finds all the categories form the database
+     * @return
+     */
     @Override
     public List<CategoryDto> findAllEntities() {
         List<Category> categories = categoryRepo.findAll();
@@ -51,6 +60,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDtoList;
     }
 
+    /**
+     * Finds a single category by id
+     * @param id
+     * @return response with category or error message
+     */
     @Override
     public ResponseDto findEntityById(Integer id) {
         try {
@@ -67,6 +81,11 @@ public class CategoryServiceImpl implements CategoryService {
                     .build();
         }    }
 
+    /**
+     * Deletes category from the database on the basis of id
+     * @param id
+     * @return response
+     */
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try {
