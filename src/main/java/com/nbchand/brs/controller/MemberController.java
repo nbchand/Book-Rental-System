@@ -3,6 +3,7 @@ package com.nbchand.brs.controller;
 import com.nbchand.brs.dto.MemberDto;
 import com.nbchand.brs.dto.ResponseDto;
 import com.nbchand.brs.service.member.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,26 +19,41 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
+    /**
+     * Displays member landing
+     * @param model
+     * @return respective view
+     */
     @GetMapping
     public String displayMemberLandingPage(Model model) {
         model.addAttribute("memberDtoList", memberService.findAllEntities());
         return "member/memberLanding";
     }
 
+    /**
+     * Displays memeber form
+     * @param model
+     * @return respective view
+     */
     @GetMapping("/add-member")
     public String displayMemberForm(Model model) {
         model.addAttribute("memberDto", MemberDto.builder().id(null).build());
         return "member/memberForm";
     }
 
+    /**
+     * Creates member
+     * @param memberDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective view
+     */
     @PostMapping
     public String addMember(@Valid @ModelAttribute("memberDto") MemberDto memberDto,
                             BindingResult bindingResult,
@@ -56,6 +72,12 @@ public class MemberController {
         return "member/memberForm";
     }
 
+    /**
+     * Deletes member by id
+     * @param id
+     * @param redirectAttributes
+     * @return respective view
+     */
     @DeleteMapping("/{id}")
     public String deleteMember(@PathVariable("id") Integer id,
                                RedirectAttributes redirectAttributes) {
@@ -64,6 +86,13 @@ public class MemberController {
         return "redirect:/member";
     }
 
+    /**
+     * Displays member form for editing
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return respective view
+     */
     @GetMapping("/edit/{id}")
     public String displayMemberEditPage(@PathVariable("id") Integer id, Model model,
                                         RedirectAttributes redirectAttributes) {
@@ -76,6 +105,15 @@ public class MemberController {
         return "redirect:/member";
     }
 
+    /**
+     * Updates member after editing
+     * @param id
+     * @param memberDto
+     * @param bindingResult
+     * @param model
+     * @param redirectAttributes
+     * @return respective view
+     */
     @PutMapping("/{id}")
     public String updateMember(@PathVariable("id") Integer id,
                                @Valid @ModelAttribute("memberDto") MemberDto memberDto,
