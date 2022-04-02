@@ -23,10 +23,16 @@ import java.util.UUID;
 @Component
 public class FileStorageComponent {
 
+    //extract dummy image location
     private final String DUMMYIMAGE = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "static" + File.separator + "image"
             + File.separator + "dummy.jpg";
 
+    /**
+     * Stores book photo and returns the stored location
+     * @param bookDto book whose image needs to be stored
+     * @return file stored location
+     */
     public ResponseDto storeFile(BookDto bookDto) {
 
         MultipartFile multipartFile = bookDto.getPhoto();
@@ -88,6 +94,11 @@ public class FileStorageComponent {
         }
     }
 
+    /**
+     * Returns base64 encoded file from provided location
+     * @param filePath location from where file needs to be extracted
+     * @return encoded file
+     */
     public String returnFileAsBase64(String filePath) {
         File file = new File(filePath);
         try {
@@ -100,6 +111,12 @@ public class FileStorageComponent {
         }
     }
 
+    /**
+     * Checks whether book image was changed or not while editing
+     * @param book book after editing
+     * @param prevBook book before editing
+     * @return boolean value whether book image was edited or not
+     */
     public Boolean isPhotoChanged(Book book, Book prevBook) {
         //book photo was not changed if
         //book is being created for the first time
@@ -116,11 +133,20 @@ public class FileStorageComponent {
         return !(prevPhoto.equals(newPhoto));
     }
 
+    /**
+     * Deletes file form provided location
+     * @param photoLocation location of file
+     */
     public void deletePhoto(String photoLocation) {
         File file = new File(photoLocation);
         log.info("Book photo deletion: "+file.delete());
     }
 
+    /**
+     * Checks if the given image is DUMMY image or not
+     * @param image location of image which needs to be checked
+     * @return boolean value whether the image is DUMMY or not
+     */
     public Boolean isImageDummy(String image) {
         return image.equals(DUMMYIMAGE);
     }
