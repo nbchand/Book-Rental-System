@@ -21,25 +21,29 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepo memberRepo;
 
+    /**
+     * Saves member in the database
+     * @param memberDto
+     * @return response
+     */
     @Override
     public ResponseDto saveEntity(MemberDto memberDto) {
         Member member = Member.builder()
+                .id(memberDto.getId())
                 .email(memberDto.getEmail())
                 .mobileNumber(memberDto.getMobileNumber())
                 .name(memberDto.getName())
                 .address(memberDto.getAddress())
                 .build();
 
-        if (memberDto.getId() != null) {
-            member.setId(memberDto.getId());
-        }
-
         try {
             memberRepo.save(member);
             return ResponseDto.builder()
                     .status(true)
                     .build();
-        } catch (Exception exception) {
+        }
+        //member is not saved if unique constraint is violated
+        catch (Exception exception) {
             if (exception.getMessage().contains("mobile")) {
                 return ResponseDto.builder()
                         .status(false)
@@ -54,6 +58,10 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    /**
+     * Finds all the members from the database
+     * @return memberList
+     */
     @Override
     public List<MemberDto> findAllEntities() {
         List<Member> members = memberRepo.findAll();
@@ -62,6 +70,11 @@ public class MemberServiceImpl implements MemberService {
         return memberDtoList;
     }
 
+    /**
+     * Finds a single member by id
+     * @param id
+     * @return member
+     */
     @Override
     public ResponseDto findEntityById(Integer id) {
         try {
@@ -78,6 +91,11 @@ public class MemberServiceImpl implements MemberService {
                     .build();
         }    }
 
+    /**
+     * Deletes member by id
+     * @param id
+     * @return response
+     */
     @Override
     public ResponseDto deleteEntityById(Integer id) {
         try {
